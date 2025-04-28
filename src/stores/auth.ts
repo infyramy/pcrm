@@ -11,9 +11,8 @@ const getApiUrl = () => {
 interface User {
   id: string;
   email: string;
-  username: string;
   fullname: string;
-  user_type: "admin" | "agent";
+  user_type: "studio";
   avatar: String;
 }
 
@@ -23,7 +22,7 @@ interface LoginCredentials {
 }
 
 interface SSOCredentials {
-  provider: 'google' | 'facebook';
+  provider: "google" | "facebook";
   token: string;
 }
 
@@ -63,9 +62,8 @@ export const useAuthStore = defineStore("auth", () => {
         user: {
           id: "1234567890",
           email: "test@test.com",
-          username: "test",
           fullname: "Test User",
-          user_type: "admin" as const,
+          user_type: "studio" as const,
           avatar: "https://i.pravatar.cc/300",
         },
       };
@@ -92,13 +90,16 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
 
     try {
-      const data = await ofetch(`${getApiUrl()}/admin/auth/sso/${credentials.provider}`, {
-        method: "POST",
-        body: {
-          token: credentials.token,
-        },
-        credentials: "include",
-      });
+      const data = await ofetch(
+        `${getApiUrl()}/admin/auth/sso/${credentials.provider}`,
+        {
+          method: "POST",
+          body: {
+            token: credentials.token,
+          },
+          credentials: "include",
+        }
+      );
 
       accessToken.value = data.accessToken;
       user.value = data.user;
@@ -108,11 +109,7 @@ export const useAuthStore = defineStore("auth", () => {
         localStorage.setItem("user", JSON.stringify(user.value));
       }
 
-      if (user.value?.user_type === "admin") {
-        router.push("/admin/dashboard");
-      } else {
-        router.push("/agent/dashboard");
-      }
+      router.push("/home");
     } catch (e: any) {
       console.log("SSO Login error: ", e);
       error.value = e.data?.message;

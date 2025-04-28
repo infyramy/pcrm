@@ -3,10 +3,14 @@ import { computed } from "vue";
 import { useAuthStore } from "./auth";
 import {
   LayoutDashboard,
+  FolderKanban,
   Users,
-  ShoppingBag,
-  Receipt,
-  Coins,
+  Mail,
+  CreditCard,
+  Calendar,
+  FileText,
+  FileCode,
+  Settings,
 } from "lucide-vue-next";
 import type { Component } from "vue";
 
@@ -28,78 +32,67 @@ interface NavigationGroup {
 }
 
 export const useNavigationStore = defineStore("navigation", () => {
-  const authStore = useAuthStore();
-  // console.log("authStore: ", authStore);
-
-  const adminNavigation: NavigationGroup[] = [
+  const navigation: NavigationGroup[] = [
     {
       title: "Main",
       menu: [
         {
-          title: "Dashboard",
-          url: "/admin/dashboard",
+          title: "Home",
+          url: "/home",
           icon: LayoutDashboard,
           isActive: true,
         },
         {
-          title: "Gold Price",
-          url: "/admin/gold-price",
-          icon: Coins,
+          title: "Projects",
+          url: "/projects",
+          icon: FolderKanban,
           isActive: true,
         },
         {
-          title: "Agent",
-          url: "/admin/agent",
+          title: "Contacts",
+          url: "/contacts",
           icon: Users,
           isActive: true,
         },
         {
-          title: "Product",
-          url: "/admin/product",
-          icon: ShoppingBag,
-          isActive: true,
-        },
-        {
-          title: "Transaction",
-          url: "/admin/transaction",
-          icon: Receipt,
+          title: "Inbox",
+          url: "/inbox",
+          icon: Mail,
           isActive: true,
         },
       ],
     },
     {
-      title: "Commission",
+      title: "Tools",
       menu: [
         {
-          title: "Configuration",
-          url: "/admin/commission/configuration",
-          icon: LayoutDashboard,
+          title: "Payments",
+          url: "/payments",
+          icon: CreditCard,
           isActive: true,
         },
         {
-          title: "Payout",
-          url: "/admin/commission/payout",
-          icon: Receipt,
-          isActive: true,
-        },
-      ],
-    },
-  ];
-
-  const agentNavigation: NavigationGroup[] = [
-    {
-      title: "Main",
-      menu: [
-        {
-          title: "Dashboard",
-          url: "/agent/dashboard",
-          icon: LayoutDashboard,
+          title: "Bookings",
+          url: "/bookings",
+          icon: Calendar,
           isActive: true,
         },
         {
-          title: "Transaction",
-          url: "/agent/transaction",
-          icon: Receipt,
+          title: "Document",
+          url: "/document",
+          icon: FileText,
+          isActive: true,
+        },
+        {
+          title: "Templates",
+          url: "/templates",
+          icon: FileCode,
+          isActive: true,
+        },
+        {
+          title: "Settings",
+          url: "/settings",
+          icon: Settings,
           isActive: true,
         },
       ],
@@ -107,20 +100,11 @@ export const useNavigationStore = defineStore("navigation", () => {
   ];
 
   // Computed property that returns navigation based on user role
-  const navigation = computed(() => {
-    const userType = authStore.user?.user_type;
-
-    if (userType === "admin") {
-      return adminNavigation;
-    } else if (userType === "agent") {
-      return agentNavigation;
-    }
-
-    // Default to agent navigation if user type is not specified
-    return agentNavigation;
+  const navigationBasedOnRole = computed(() => {
+    return navigation;
   });
 
   return {
-    navigation,
+    navigation: navigationBasedOnRole,
   };
 });

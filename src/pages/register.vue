@@ -33,31 +33,49 @@ const router = useRouter();
 const authStore = useAuthStore();
 const mode = useColorMode();
 
+const businessName = ref("");
 const email = ref("");
 const password = ref("");
+const confirmPassword = ref("");
 const isSubmitting = ref(false);
 const showPassword = ref(false);
 const isGoogleLoaded = ref(false);
 const isFacebookLoaded = ref(false);
 
 async function handleSubmit() {
-  if (!email.value || !password.value) {
+  if (
+    !businessName.value ||
+    !email.value ||
+    !password.value ||
+    !confirmPassword.value
+  ) {
     toast.error("Please fill in all fields");
+    return;
+  }
+
+  if (password.value !== confirmPassword.value) {
+    toast.error("Passwords do not match");
     return;
   }
 
   try {
     isSubmitting.value = true;
 
-    await authStore.login({
-      email: email.value,
-      password: password.value,
-    });
+    // await authStore.register({
+    //   business_name: businessName.value,
+    //   email: email.value,
+    //   password: password.value,
+    // });
 
-    router.push("/home");
+    toast.success(
+      "Registration successful! Please check your email to verify your account."
+    );
+    router.push("/login");
   } catch (error: any) {
-    console.log("error: ", error);
-    toast.error(error.data?.message || "Invalid email or password");
+    console.error("Registration error:", error);
+    toast.error(
+      error.data?.message || "Registration failed. Please try again."
+    );
   } finally {
     isSubmitting.value = false;
   }
@@ -74,14 +92,12 @@ function togglePasswordVisibility() {
 // Initialize Google SDK
 function loadGoogleSDK() {
   return new Promise<void>((resolve) => {
-    // First, add the script to the page
     const script = document.createElement("script");
     script.src = "https://apis.google.com/js/api.js";
     script.async = true;
     script.defer = true;
 
     script.onload = () => {
-      // Once the script is loaded, load the auth2 library
       window.gapi.load("auth2", () => {
         window.gapi.auth2
           .init({
@@ -195,10 +211,8 @@ async function handleFacebookLogin() {
   }
 }
 
-// Update onMounted to use both async SDK loads
 onMounted(async () => {
   try {
-    // Load both SDKs in parallel
     await Promise.all([loadGoogleSDK(), loadFacebookSDK()]);
   } catch (error) {
     console.error("Failed to load authentication SDKs:", error);
@@ -257,7 +271,7 @@ onMounted(async () => {
         </svg>
       </button>
 
-      <!-- Left column - Login form -->
+      <!-- Left column - Registration form -->
       <div
         class="relative hidden h-full flex-col bg-background p-10 text-white lg:flex dark:border-r"
       >
@@ -273,30 +287,41 @@ onMounted(async () => {
         <div class="relative z-20 mt-auto">
           <blockquote class="space-y-2">
             <p class="text-lg">
-              &ldquo;This library has saved me countless hours of work and
-              helped me deliver stunning designs to my clients faster than ever
-              before.&rdquo;
+              &ldquo;Join our community and start your journey with us today.
+              We're excited to have you on board!&rdquo;
             </p>
             <footer class="text-sm">Sofia Davis</footer>
           </blockquote>
         </div>
       </div>
 
-      <!-- Right column - Login form -->
+      <!-- Right column - Registration form -->
       <div class="w-full lg:p-8">
         <div
           class="mx-auto flex w-full flex-col justify-center space-y-6 px-4 sm:w-[350px]"
         >
           <div class="flex flex-col space-y-2 text-center">
-            <h1 class="text-2xl font-semibold tracking-tight">Welcome back</h1>
+            <h1 class="text-2xl font-semibold tracking-tight">
+              Create an account
+            </h1>
             <p class="text-sm text-muted-foreground">
-              Sign in to your account to continue
+              Enter your details below to create your account
             </p>
           </div>
 
           <Card class="w-full">
             <CardContent class="grid gap-4 pt-6">
               <form @submit.prevent="handleSubmit" class="grid gap-4">
+                <div class="grid gap-2">
+                  <Label html-for="businessName">Business Name</Label>
+                  <Input
+                    id="businessName"
+                    type="text"
+                    v-model="businessName"
+                    placeholder="Your Business Name"
+                    required
+                  />
+                </div>
                 <div class="grid gap-2">
                   <Label html-for="email">Email</Label>
                   <Input
@@ -305,27 +330,16 @@ onMounted(async () => {
                     v-model="email"
                     placeholder="name@example.com"
                     required
-                    tabindex="1"
                   />
                 </div>
                 <div class="grid gap-2">
-                  <div class="flex items-center">
-                    <Label html-for="password">Password</Label>
-                    <router-link
-                      to="/forgot-password"
-                      class="ml-auto inline-block text-sm underline"
-                      tabindex="3"
-                    >
-                      Forgot password?
-                    </router-link>
-                  </div>
+                  <Label html-for="password">Password</Label>
                   <div class="relative">
                     <Input
                       id="password"
                       :type="showPassword ? 'text' : 'password'"
                       v-model="password"
                       required
-                      tabindex="2"
                     />
                     <button
                       type="button"
@@ -376,14 +390,23 @@ onMounted(async () => {
                     </button>
                   </div>
                 </div>
+                <div class="grid gap-2">
+                  <Label html-for="confirmPassword">Confirm Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    :type="showPassword ? 'text' : 'password'"
+                    v-model="confirmPassword"
+                    required
+                  />
+                </div>
                 <Button type="submit" class="w-full" :disabled="isSubmitting">
                   <span v-if="isSubmitting" class="flex items-center gap-2">
                     <span
                       class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
                     />
-                    Signing in...
+                    Creating account...
                   </span>
-                  <span v-else>Sign in</span>
+                  <span v-else>Create account</span>
                 </Button>
               </form>
 
@@ -444,17 +467,17 @@ onMounted(async () => {
           </Card>
 
           <p class="text-center text-sm text-muted-foreground">
-            Don't have an account?
+            Already have an account?
             <router-link
-              to="/register"
+              to="/login"
               class="underline underline-offset-4 hover:text-primary"
             >
-              Create an account
+              Sign in
             </router-link>
           </p>
 
           <p class="text-center text-sm text-muted-foreground">
-            By clicking continue, you agree to our
+            By creating an account, you agree to our
             <router-link
               to="/terms-of-service"
               class="underline underline-offset-4 hover:text-primary"

@@ -12,12 +12,12 @@
     --popover-foreground: 240 10% 3.9%;
     --primary: 128 25% 27%; /* #35573A */
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --secondary: 128 15% 95%; /* Light green-tinted gray */
+    --secondary-foreground: 128 25% 20%; /* Dark green text */
+    --muted: 128 10% 96%; /* Very light green-tinted gray */
+    --muted-foreground: 128 15% 40%; /* Medium green-gray text */
+    --accent: 128 15% 95%; /* Light green-tinted gray */
+    --accent-foreground: 128 25% 20%; /* Dark green text */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
@@ -29,14 +29,14 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 36 42% 54%; /* #BF9A53 */
-    --sidebar-primary-foreground: 0 0% 10%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 100%; /* Pure white background */
+    --sidebar-foreground: 240 5.3% 26.1%; /* Dark gray text */
+    --sidebar-primary: 128 25% 27%; /* Match primary color */
+    --sidebar-primary-foreground: 0 0% 100%; /* White text for primary */
+    --sidebar-accent: 240 4.8% 95.9%; /* Light gray accent */
+    --sidebar-accent-foreground: 240 5.9% 10%; /* Dark text for accent */
+    --sidebar-border: 240 5.9% 90%; /* Light border */
+    --sidebar-ring: 128 25% 27%; /* Match primary color */
   }
 
   .dark {
@@ -48,12 +48,12 @@
     --popover-foreground: 0 0% 98%;
     --primary: 128 25% 27%; /* #35573A */
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --secondary: 128 15% 20%; /* Dark green-tinted gray */
+    --secondary-foreground: 120 20% 98%; /* Light text */
+    --muted: 128 15% 15%; /* Very dark green-tinted gray */
+    --muted-foreground: 128 10% 60%; /* Light green-gray text */
+    --accent: 128 15% 20%; /* Dark green-tinted gray */
+    --accent-foreground: 120 20% 98%; /* Light text */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
@@ -64,14 +64,14 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 7%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 36 42% 54%; /* #BF9A53 */
-    --sidebar-primary-foreground: 0 0% 10%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 128 25% 8%; /* Even darker for dark mode */
+    --sidebar-foreground: 120 20% 98%; /* Light text for contrast */
+    --sidebar-primary: 128 25% 27%; /* Match primary color */
+    --sidebar-primary-foreground: 0 0% 100%; /* White text for primary */
+    --sidebar-accent: 128 25% 12%; /* Slightly lighter than background */
+    --sidebar-accent-foreground: 120 20% 98%; /* Light text for contrast */
+    --sidebar-border: 128 25% 12%; /* Subtle border */
+    --sidebar-ring: 128 25% 27%; /* Match primary color */
   }
 }
 
