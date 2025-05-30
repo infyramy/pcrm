@@ -147,26 +147,6 @@ const router = createRouter({
         requiresAuth: true,
       },
     },
-    // {
-    //   path: "/studio/forms/:id/field-builder",
-    //   name: "form-detail-field-builder",
-    //   component: () =>
-    //     import("@/pages/studio/forms/[id]/field-builder/index.vue"),
-    //   meta: {
-    //     layout: "forms",
-    //     requiresAuth: true,
-    //   },
-    // },
-    // {
-    //   path: "/studio/forms/:id/field-builder-2",
-    //   name: "form-detail-field-builder-2",
-    //   component: () =>
-    //     import("@/pages/studio/forms/[id]/field-builder-2/index.vue"),
-    //   meta: {
-    //     layout: "forms",
-    //     requiresAuth: true,
-    //   },
-    // },
     {
       path: "/studio/forms/:id/field-builder",
       name: "form-detail-field-builder-3",
@@ -174,6 +154,15 @@ const router = createRouter({
         import("@/pages/studio/forms/[id]/field-builder-3/index.vue"),
       meta: {
         layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/responses",
+      name: "form-detail-responses",
+      component: () => import("@/pages/studio/forms/[id]/responses/index.vue"),
+      meta: {
+        layout: "dashboard",
         requiresAuth: true,
       },
     },
@@ -192,6 +181,89 @@ const router = createRouter({
       component: () => import("@/pages/studio/forms/[id]/whatsapp/index.vue"),
       meta: {
         layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/projects",
+      name: "projects",
+      component: () => import("@/pages/studio/projects/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/projects/:id",
+      name: "project-detail",
+      component: () => import("@/pages/studio/projects/[id]/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/projects/:id/invoice",
+      name: "project-invoice",
+      component: () => import("@/pages/studio/projects/[id]/invoice/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/contacts",
+      name: "contacts",
+      component: () => import("@/pages/studio/contacts/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/contacts/:id",
+      name: "contact-detail",
+      component: () => import("@/pages/studio/contacts/[id]/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/contacts/:id/edit",
+      name: "contact-edit",
+      component: () => import("@/pages/studio/contacts/[id]/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/contacts/:id/whatsapp",
+      name: "contact-whatsapp",
+      component: () =>
+        import("@/pages/studio/contacts/[id]/whatsapp.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/contacts/:id/email",
+      name: "contact-email",
+      component: () => import("@/pages/studio/contacts/[id]/email.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/contacts/:id/projects",
+      name: "contact-projects",
+      component: () =>
+        import("@/pages/studio/contacts/[id]/projects.vue"),
+      meta: {
+        layout: "dashboard",
         requiresAuth: true,
       },
     },

@@ -44,7 +44,7 @@ export const useNavigationStore = defineStore("navigation", () => {
         },
         {
           title: "Projects",
-          url: "/projects",
+          url: "/studio/projects",
           icon: FolderKanban,
           isActive: true,
         },
@@ -56,14 +56,8 @@ export const useNavigationStore = defineStore("navigation", () => {
         },
         {
           title: "Contacts",
-          url: "/contacts",
+          url: "/studio/contacts",
           icon: Users,
-          isActive: true,
-        },
-        {
-          title: "Inbox",
-          url: "/inbox",
-          icon: Mail,
           isActive: true,
         },
       ],
@@ -72,32 +66,14 @@ export const useNavigationStore = defineStore("navigation", () => {
       title: "Tools",
       menu: [
         {
-          title: "Payments",
-          url: "/payments",
-          icon: CreditCard,
-          isActive: true,
-        },
-        {
-          title: "Bookings",
-          url: "/bookings",
+          title: "Calendar",
+          url: "/studio/calendar",
           icon: Calendar,
           isActive: true,
         },
         {
-          title: "Document",
-          url: "/document",
-          icon: FileText,
-          isActive: true,
-        },
-        {
-          title: "Templates",
-          url: "/templates",
-          icon: FileCode,
-          isActive: true,
-        },
-        {
           title: "Settings",
-          url: "/settings",
+          url: "/studio/settings",
           icon: Settings,
           isActive: true,
         },
