@@ -54,11 +54,7 @@ async function handleSubmit() {
       password: password.value,
     });
 
-    if (authStore.user?.user_type === "admin") {
-      router.push("/admin/dashboard");
-    } else {
-      router.push("/agent/dashboard");
-    }
+    router.push("/studio/home");
   } catch (error: any) {
     console.log("error: ", error);
     toast.error(error.data?.message || "Invalid email or password");
@@ -309,6 +305,7 @@ onMounted(async () => {
                     v-model="email"
                     placeholder="name@example.com"
                     required
+                    tabindex="1"
                   />
                 </div>
                 <div class="grid gap-2">
@@ -317,6 +314,7 @@ onMounted(async () => {
                     <router-link
                       to="/forgot-password"
                       class="ml-auto inline-block text-sm underline"
+                      tabindex="3"
                     >
                       Forgot password?
                     </router-link>
@@ -327,6 +325,7 @@ onMounted(async () => {
                       :type="showPassword ? 'text' : 'password'"
                       v-model="password"
                       required
+                      tabindex="2"
                     />
                     <button
                       type="button"
@@ -443,6 +442,16 @@ onMounted(async () => {
               </div>
             </CardContent>
           </Card>
+
+          <p class="text-center text-sm text-muted-foreground">
+            Don't have an account?
+            <router-link
+              to="/register"
+              class="underline underline-offset-4 hover:text-primary"
+            >
+              Create an account
+            </router-link>
+          </p>
 
           <p class="text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our

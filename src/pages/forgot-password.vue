@@ -95,7 +95,7 @@ function toggleMode() {
       <div
         class="relative hidden h-full flex-col bg-background p-10 text-white lg:flex dark:border-r"
       >
-        <div class="absolute inset-0 bg-zinc-900" />
+        <div class="absolute inset-0 bg-primary" />
         <div class="relative z-20 flex items-center text-lg font-medium">
           <img
             src="@/assets/logo/logo400.jpg"

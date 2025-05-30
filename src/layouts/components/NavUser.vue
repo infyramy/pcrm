@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { ChevronsUpDown, LogOut, HelpCircle, Settings } from "lucide-vue-next";
+import { ChevronsUpDown, LogOut, HelpCircle, Settings, User, CreditCard, Wallet } from "lucide-vue-next";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 
@@ -32,7 +32,27 @@ function navigateToSupport() {
 }
 
 function navigateToSettings() {
-  router.push("/settings");
+  router.push("/settings/advanced");
+}
+
+function navigateToNotifications() {
+  router.push("/notifications");
+}
+
+function navigateToContact() {
+  router.push("/contact");
+}
+
+function navigateToProfile() {
+  router.push("/profile");
+}
+
+function navigateToAccount() {
+  router.push("/account");
+}
+
+function navigateToBilling() {
+  router.push("/billing");
 }
 </script>
 <template>
@@ -50,8 +70,8 @@ function navigateToSettings() {
                   authStore.user?.avatar ? String(authStore.user.avatar) : ''
                 "
                 :alt="
-                  authStore.user?.username
-                    ? String(authStore.user.username)
+                  authStore.user?.fullname
+                    ? String(authStore.user.fullname)
                     : ''
                 "
               />
@@ -80,8 +100,8 @@ function navigateToSettings() {
                     authStore.user?.avatar ? String(authStore.user.avatar) : ''
                   "
                   :alt="
-                    authStore.user?.username
-                      ? String(authStore.user.username)
+                    authStore.user?.fullname
+                      ? String(authStore.user.fullname)
                       : ''
                   "
                 />
@@ -100,9 +120,21 @@ function navigateToSettings() {
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup>
+            <DropdownMenuItem @click="navigateToProfile">
+              <User />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="navigateToAccount">
+              <Wallet />
+              Account
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="navigateToBilling">
+              <CreditCard />
+              Billing
+            </DropdownMenuItem>
             <DropdownMenuItem @click="navigateToSettings">
               <Settings />
-              Setting
+              Advanced Settings
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

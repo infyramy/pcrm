@@ -14,6 +14,15 @@ const router = createRouter({
       },
     },
     {
+      path: "/register",
+      name: "register",
+      component: () => import("@/pages/register.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: false,
+      },
+    },
+    {
       path: "/forgot-password",
       name: "forgot-password",
       component: () => import("@/pages/forgot-password.vue"),
@@ -40,141 +49,154 @@ const router = createRouter({
         requiresAuth: false,
       },
     },
+
+    // Studio / Manager routes
     {
       path: "/",
-      redirect: "/admin/dashboard",
+      redirect: "/studio/home",
+    },
+    {
+      path: "/studio/home",
+      name: "home",
+      component: () => import("@/pages/studio/home/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms",
+      name: "form",
+      component: () => import("@/pages/studio/forms/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/create",
+      name: "form-create",
+      component: () => import("@/pages/studio/forms/create/index.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/create/inquiry",
+      name: "form-create-inquiry",
+      component: () => import("@/pages/studio/forms/create/inquiry/index.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/create/calculator",
+      name: "form-create-calculator",
+      component: () =>
+        import("@/pages/studio/forms/create/calculator/index.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id",
+      name: "form-detail",
+      component: () => import("@/pages/studio/forms/[id]/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/create/calculator/field",
+      name: "form-create-calculator-field",
+      component: () =>
+        import("@/pages/studio/forms/create/calculator/field/index.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/title",
+      name: "form-detail-title",
+      component: () => import("@/pages/studio/forms/[id]/title/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/sessions",
+      name: "form-detail-sessions",
+      component: () => import("@/pages/studio/forms/[id]/sessions/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/addons",
+      name: "form-detail-addons",
+      component: () => import("@/pages/studio/forms/[id]/addons/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    // {
+    //   path: "/studio/forms/:id/field-builder",
+    //   name: "form-detail-field-builder",
+    //   component: () =>
+    //     import("@/pages/studio/forms/[id]/field-builder/index.vue"),
+    //   meta: {
+    //     layout: "forms",
+    //     requiresAuth: true,
+    //   },
+    // },
+    // {
+    //   path: "/studio/forms/:id/field-builder-2",
+    //   name: "form-detail-field-builder-2",
+    //   component: () =>
+    //     import("@/pages/studio/forms/[id]/field-builder-2/index.vue"),
+    //   meta: {
+    //     layout: "forms",
+    //     requiresAuth: true,
+    //   },
+    // },
+    {
+      path: "/studio/forms/:id/field-builder",
+      name: "form-detail-field-builder-3",
+      component: () =>
+        import("@/pages/studio/forms/[id]/field-builder-3/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/terms",
+      name: "form-detail-terms",
+      component: () => import("@/pages/studio/forms/[id]/terms/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/whatsapp",
+      name: "form-detail-whatsapp",
+      component: () => import("@/pages/studio/forms/[id]/whatsapp/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
     },
 
-    // Admin
-    {
-      path: "/admin/dashboard",
-      name: "admin-dashboard",
-      component: () => import("@/pages/admin/dashboard/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/agent",
-      name: "admin-agent",
-      component: () => import("@/pages/admin/agent/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/product",
-      name: "admin-product",
-      component: () => import("@/pages/admin/product/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/product/add",
-      name: "admin-product-add",
-      component: () => import("@/pages/admin/product/add.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/product/edit/:id",
-      name: "admin-product-edit",
-      component: () => import("@/pages/admin/product/edit/[id].vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/transaction",
-      name: "admin-transaction",
-      component: () => import("@/pages/admin/transaction/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/transaction/:id",
-      name: "admin-transaction-details",
-      component: () => import("@/pages/admin/transaction/[id].vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/commission/configuration",
-      name: "admin-commission-configuration",
-      component: () =>
-        import("@/pages/admin/commission/configuration/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/commission/configuration/edit/:id",
-      name: "admin-commission-configuration-edit",
-      component: () =>
-        import("@/pages/admin/commission/configuration/edit/[id].vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/commission/payout",
-      name: "admin-commission-payout",
-      component: () => import("@/pages/admin/commission/payout/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/commission/payout/details/:id",
-      name: "admin-commission-payout-details",
-      component: () => import("@/pages/admin/commission/payout/[id].vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/admin/gold-price",
-      name: "admin-gold-price",
-      component: () => import("@/pages/admin/gold-price/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    // Agent
-    {
-      path: "/agent/dashboard",
-      name: "agent-dashboard",
-      component: () => import("@/pages/agent/dashboard/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/agent/transaction",
-      name: "agent-transaction",
-      component: () => import("@/pages/agent/transaction/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
-      },
-    },
+    // Catch all route for 404 pages
     {
       path: "/:pathMatch(.*)*",
       name: "not-found",
@@ -182,15 +204,6 @@ const router = createRouter({
       meta: {
         layout: "blank",
         requiresAuth: false,
-      },
-    },
-    {
-      path: "/settings",
-      name: "setting",
-      component: () => import("@/pages/setting/index.vue"),
-      meta: {
-        layout: "dashboard",
-        requiresAuth: true,
       },
     },
   ],
@@ -204,10 +217,8 @@ router.beforeEach((to, _from, next) => {
   if (requiresAuth && !authStore.isAuthenticated) {
     next("/login");
   } else if (to.path === "/login" && authStore.isAuthenticated) {
-    if (authStore.user?.user_type === "admin") {
-      next("/admin/dashboard");
-    } else {
-      next("/agent/dashboard");
+    if (authStore.user?.user_type === "studio") {
+      next("/home");
     }
   } else {
     next();
