@@ -29,7 +29,7 @@
       <!-- Action buttons with modern design -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
         <router-link
-          to="/home"
+          to="/studio/home"
           class="group inline-flex h-12 items-center justify-center rounded-xl bg-primary px-8 py-3 text-base font-medium text-white transition-all duration-300 hover:bg-primary/90 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           <span class="mr-2 transition-transform duration-300 group-hover:-translate-x-1">←</span>

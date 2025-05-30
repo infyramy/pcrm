@@ -54,7 +54,7 @@ async function handleSubmit() {
       password: password.value,
     });
 
-    router.push("/home");
+    router.push("/studio/home");
   } catch (error: any) {
     console.log("error: ", error);
     toast.error(error.data?.message || "Invalid email or password");

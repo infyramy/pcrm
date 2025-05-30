@@ -38,7 +38,7 @@ export const useNavigationStore = defineStore("navigation", () => {
       menu: [
         {
           title: "Home",
-          url: "/home",
+          url: "/studio/home",
           icon: LayoutDashboard,
           isActive: true,
         },
@@ -46,6 +46,12 @@ export const useNavigationStore = defineStore("navigation", () => {
           title: "Projects",
           url: "/projects",
           icon: FolderKanban,
+          isActive: true,
+        },
+        {
+          title: "Forms",
+          url: "/studio/forms",
+          icon: FileText,
           isActive: true,
         },
         {

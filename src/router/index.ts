@@ -49,19 +49,153 @@ const router = createRouter({
         requiresAuth: false,
       },
     },
+
+    // Studio / Manager routes
     {
       path: "/",
-      redirect: "/home",
+      redirect: "/studio/home",
     },
     {
-      path: "/home",
+      path: "/studio/home",
       name: "home",
-      component: () => import("@/pages/home/index.vue"),
+      component: () => import("@/pages/studio/home/index.vue"),
       meta: {
         layout: "dashboard",
         requiresAuth: true,
       },
     },
+    {
+      path: "/studio/forms",
+      name: "form",
+      component: () => import("@/pages/studio/forms/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/create",
+      name: "form-create",
+      component: () => import("@/pages/studio/forms/create/index.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/create/inquiry",
+      name: "form-create-inquiry",
+      component: () => import("@/pages/studio/forms/create/inquiry/index.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/create/calculator",
+      name: "form-create-calculator",
+      component: () =>
+        import("@/pages/studio/forms/create/calculator/index.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id",
+      name: "form-detail",
+      component: () => import("@/pages/studio/forms/[id]/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/create/calculator/field",
+      name: "form-create-calculator-field",
+      component: () =>
+        import("@/pages/studio/forms/create/calculator/field/index.vue"),
+      meta: {
+        layout: "blank",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/title",
+      name: "form-detail-title",
+      component: () => import("@/pages/studio/forms/[id]/title/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/sessions",
+      name: "form-detail-sessions",
+      component: () => import("@/pages/studio/forms/[id]/sessions/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/addons",
+      name: "form-detail-addons",
+      component: () => import("@/pages/studio/forms/[id]/addons/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    // {
+    //   path: "/studio/forms/:id/field-builder",
+    //   name: "form-detail-field-builder",
+    //   component: () =>
+    //     import("@/pages/studio/forms/[id]/field-builder/index.vue"),
+    //   meta: {
+    //     layout: "forms",
+    //     requiresAuth: true,
+    //   },
+    // },
+    // {
+    //   path: "/studio/forms/:id/field-builder-2",
+    //   name: "form-detail-field-builder-2",
+    //   component: () =>
+    //     import("@/pages/studio/forms/[id]/field-builder-2/index.vue"),
+    //   meta: {
+    //     layout: "forms",
+    //     requiresAuth: true,
+    //   },
+    // },
+    {
+      path: "/studio/forms/:id/field-builder",
+      name: "form-detail-field-builder-3",
+      component: () =>
+        import("@/pages/studio/forms/[id]/field-builder-3/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/terms",
+      name: "form-detail-terms",
+      component: () => import("@/pages/studio/forms/[id]/terms/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/forms/:id/whatsapp",
+      name: "form-detail-whatsapp",
+      component: () => import("@/pages/studio/forms/[id]/whatsapp/index.vue"),
+      meta: {
+        layout: "forms",
+        requiresAuth: true,
+      },
+    },
+
     // Catch all route for 404 pages
     {
       path: "/:pathMatch(.*)*",

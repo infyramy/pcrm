@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import DashboardLayout from "@/layouts/dashboard.vue";
 import BlankLayout from "@/layouts/blank.vue";
+import FormsLayout from "@/layouts/forms.vue";
 import { Toaster } from "@/components/ui/sonner";
 
 const route = useRoute();
@@ -12,13 +13,14 @@ const authStore = useAuthStore();
 // Initialize auth store
 authStore.init();
 
-const layout = computed<'dashboard' | 'blank'>(() => {
-  return route.meta.layout as 'dashboard' | 'blank' || "blank";
+const layout = computed<"dashboard" | "blank" | "forms">(() => {
+  return (route.meta.layout as "dashboard" | "blank" | "forms") || "blank";
 });
 
 const layouts = {
   dashboard: DashboardLayout,
   blank: BlankLayout,
+  forms: FormsLayout,
 } as const;
 </script>
 
@@ -26,11 +28,7 @@ const layouts = {
   <Toaster position="top-right" />
   <component :is="layouts[layout]">
     <router-view v-slot="{ Component }">
-      <transition 
-        name="fade-slide"
-        mode="out-in"
-        appear
-      >
+      <transition name="fade-slide" mode="out-in" appear>
         <component :is="Component" :key="route.path" />
       </transition>
     </router-view>
