@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { ofetch } from "ofetch";
+import { exampleUsers, getMockCredentials } from "@/constants/example-users";
 
 const getApiUrl = () => {
   return window.API_URL;
@@ -12,7 +13,7 @@ interface User {
   id: string;
   email: string;
   fullname: string;
-  user_type: "studio";
+  user_type: "superadmin" | "studio" | "photographer" | "affiliate";
   avatar: String;
 }
 
@@ -45,40 +46,34 @@ export const useAuthStore = defineStore("auth", () => {
     isLoading.value = true;
     error.value = null;
 
-    // console.log("getApiUrl le: ", getApiUrl());
-
     try {
-      // const data = await ofetch(`${getApiUrl()}/admin/auth/login`, {
-      //   method: "POST",
-      //   body: {
-      //     identifier: credentials.email,
-      //     password: credentials.password,
-      //   },
-      //   credentials: "include", // Important: This enables sending/receiving cookies
-      // });
+      // Mock authentication using example users
+      const matchedUser = exampleUsers.find(u => u.email === credentials.email);
+      const mockCreds = matchedUser ? getMockCredentials(matchedUser) : null;
 
-      let data = {
-        accessToken: "1234567890",
-        user: {
-          id: "1234567890",
-          email: "test@test.com",
-          fullname: "Test User",
-          user_type: "studio" as const,
-          avatar: "https://i.pravatar.cc/300",
-        },
+      if (!matchedUser || credentials.password !== mockCreds?.password) {
+        throw new Error("Invalid email or password");
+      }
+
+      const data = {
+        accessToken: `mock_token_${matchedUser.id}`,
+        user: matchedUser
       };
 
       accessToken.value = data.accessToken;
       user.value = data.user;
 
-      // Only store access token and user in localStorage
+      // Store access token and user in localStorage
       if (accessToken.value) {
         localStorage.setItem("access_token", accessToken.value);
         localStorage.setItem("user", JSON.stringify(user.value));
       }
+
+      // Navigate to home page after successful login
+      router.push("/home");
     } catch (e: any) {
       console.log("Login error: ", e);
-      error.value = e.data?.message;
+      error.value = e.message || "Login failed";
       throw e;
     } finally {
       isLoading.value = false;

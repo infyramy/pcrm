@@ -10,8 +10,18 @@ import {
   CalendarCheck,
   Plus,
   Camera,
+  Wallet,
+  CircleUserRound,
+  HelpCircle,
+  Clock,
+  CheckCircle2,
+  Building2,
+  UserPlus,
+  BarChart3,
+  Globe,
 } from "lucide-vue-next";
 import type { Component } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
 interface MenuItem {
   title: string;
@@ -31,7 +41,58 @@ interface NavigationGroup {
 }
 
 export const useNavigationStore = defineStore("navigation", () => {
-  const navigation: NavigationGroup[] = [
+  const authStore = useAuthStore();
+
+  const superadminNavigation: NavigationGroup[] = [
+    {
+      title: "Main",
+      menu: [
+        {
+          title: "Dashboard",
+          url: "/superadmin/dashboard",
+          icon: LayoutDashboard,
+          isActive: true,
+        },
+        {
+          title: "Studios",
+          url: "/superadmin/studios",
+          icon: Building2,
+          isActive: true,
+        },
+        {
+          title: "Users",
+          url: "/superadmin/users",
+          icon: Users,
+          isActive: true,
+        },
+        {
+          title: "Analytics",
+          url: "/superadmin/analytics",
+          icon: BarChart3,
+          isActive: true,
+        },
+      ],
+    },
+    {
+      title: "Settings",
+      menu: [
+        {
+          title: "System Settings",
+          url: "/superadmin/settings",
+          icon: Settings,
+          isActive: true,
+        },
+        {
+          title: "API Access",
+          url: "/superadmin/api-access",
+          icon: Globe,
+          isActive: true,
+        },
+      ],
+    },
+  ];
+
+  const studioNavigation: NavigationGroup[] = [
     {
       title: "Main",
       menu: [
@@ -104,12 +165,97 @@ export const useNavigationStore = defineStore("navigation", () => {
     },
   ];
 
+  const photographerNavigation: NavigationGroup[] = [
+    {
+      title: "Main",
+      menu: [
+        {
+          title: "Dashboard",
+          url: "/photographer/home",
+          icon: LayoutDashboard,
+          isActive: true,
+        },
+        {
+          title: "Calendar",
+          url: "/photographer/calendar",
+          icon: Calendar,
+          isActive: true,
+        },
+        {
+          title: "My Sessions",
+          url: "/photographer/sessions",
+          icon: Camera,
+          isActive: true,
+          items: [
+            {
+              title: "Upcoming",
+              url: "/photographer/sessions/upcoming",
+            },
+            {
+              title: "Past",
+              url: "/photographer/sessions/past",
+            },
+          ],
+        },
+        {
+          title: "Payouts",
+          url: "/photographer/payouts",
+          icon: Wallet,
+          isActive: true,
+        },
+      ],
+    },
+  ];
+
+  const affiliateNavigation: NavigationGroup[] = [
+    {
+      title: "Main",
+      menu: [
+        {
+          title: "Home",
+          url: "/affiliate/home",
+          icon: LayoutDashboard,
+          isActive: true,
+        },
+        {
+          title: "Referrals",
+          url: "/affiliate/referrals",
+          icon: UserPlus,
+          isActive: true,
+        },
+        {
+          title: "Earnings",
+          url: "/affiliate/earnings",
+          icon: Wallet,
+          isActive: true,
+        },
+      ],
+    },
+  ];
+
   // Computed property that returns navigation based on user role
-  const navigationBasedOnRole = computed(() => {
-    return navigation;
+  const navigation = computed(() => {
+    const userType = authStore.user?.user_type;
+
+    switch (userType) {
+      case "superadmin":
+        return superadminNavigation;
+      case "studio":
+        return studioNavigation;
+      case "photographer":
+        return photographerNavigation;
+      case "affiliate":
+        return affiliateNavigation;
+      default:
+        return [];
+    }
   });
 
   return {
-    navigation: navigationBasedOnRole,
+    navigation,
+    superadminNavigation,
+    studioNavigation,
+    photographerNavigation,
+    affiliateNavigation,
   };
 });

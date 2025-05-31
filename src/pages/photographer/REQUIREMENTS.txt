@@ -1,0 +1,122 @@
+Absolutely! Here's a **detailed breakdown** of the **Photographer Dashboard** including suggested **menu structure** to help guide your UI/UX and navigation planning.
+
+---
+
+## 📸 Photographer Dashboard – Full Breakdown
+
+---
+
+### ✅ MAIN MENU STRUCTURE
+
+1. **Dashboard (Home)**
+2. **My Sessions**
+
+   * Upcoming
+   * Past
+3. **Session Details**
+
+   * (Dynamic page per session)
+4. **Payouts**
+5. **Profile**
+6. **Support / Help**
+
+---
+
+### 1. **Dashboard (Home)**
+
+**Overview panel showing today's or upcoming job(s):**
+
+* Next assigned session (title, time, location)
+* Quick status update buttons (Arrived, Completed, Uploaded)
+* Quick summary:
+
+  * Total sessions this month
+  * Earnings this month
+  * Pending payouts
+  * Completed sessions
+
+---
+
+### 2. **My Sessions**
+
+#### A. **Upcoming Sessions**
+
+* List of future sessions assigned to the photographer
+  Each item shows:
+
+  * Title
+  * Date & Time
+  * Location
+  * Client Name
+  * Session Status (Pending, Arrived, Completed, Uploaded)
+
+#### B. **Past Sessions**
+
+* Completed sessions with:
+
+  * Final status
+  * Upload link (if provided)
+  * Payout info (see below)
+
+---
+
+### 3. **Session Details** (Dynamic Page)
+
+When clicking a session:
+
+* **Session Info**
+
+  * Title
+  * Date & Time
+  * Duration
+  * Location (with map link or directions)
+  * Client Name & Contact
+  * Notes / Special instructions
+* **Status Update Buttons**:
+
+  * Mark as **Arrived**
+  * Mark as **Completed**
+  * Mark as **Raw Uploaded** (with upload link input field)
+
+    * Upload field: Google Drive / Dropbox / Custom URL
+* **Earnings Info**:
+
+  * Payout Amount for this session
+  * Payout Status (Not Paid / Paid)
+
+---
+
+### 4. **Payouts**
+
+* **Earnings Summary**
+
+  * Total earned (month-to-date / all-time)
+  * Upcoming payouts
+* **Payout List**
+
+  * Each session listed with:
+
+    * Session Title
+    * Date
+    * Amount
+    * Payment Status (Not Paid / Paid)
+    * Paid Date (if available)
+    * Invoice/download slip (optional)
+
+---
+
+### 6. **Support / Help**
+
+* Contact form
+* Help articles (e.g., how to upload, payout timelines)
+* Chat support (if applicable)
+
+---
+
+## 🔄 Status Flow Suggestion (Optional Logic)
+
+* Default: **Pending**
+* Once "Arrived" → can proceed to **Completed**
+* Once "Completed" → **Raw Uploaded** allowed
+* Once "Raw Uploaded" → triggers admin notification or auto-approval
+* After admin approves → marked for **Payout**
