@@ -1,0 +1,150 @@
+Here's a detailed breakdown for the **Photographer Page** (Admin Panel) in your *wpcrm* system. This page is where the admin can manage all photographers under the studio — whether full-time, freelance, or part-time.
+
+---
+
+## 📸 Photographer Page (Admin Panel)
+
+A centralized dashboard to **manage, monitor, assign**, and **audit** photographers.
+
+---
+
+### 🔹 1. **Photographer List View**
+
+Main table displaying all photographers registered under the studio.
+
+**Columns:**
+
+* **Photo/Profile Image**
+* **Full Name**
+* **Role** (Photographer, Videographer, Editor, Assistant)
+* **Email & Phone**
+* **Status** (Active / Inactive)
+* **Total Jobs Assigned**
+* **Rating** (Client feedback)
+* **Availability** (Free, Busy, On Leave)
+* **Action Buttons** (View, Edit, Deactivate, Delete)
+
+**Features:**
+
+* **Search & Filter**
+
+  * By name, role, status, date joined.
+* **Sort**
+
+  * Alphabetically, by job count, rating, or last active date.
+
+---
+
+### 🔹 2. **Photographer Profile Detail View**
+
+Clicking on a photographer shows their full profile.
+
+#### **Basic Info:**
+
+* Name, email, phone, profile image
+* Role(s)
+* Date Joined
+* IC/Passport No (optional)
+* Emergency Contact
+
+#### **Job Statistics:**
+
+* Total Sessions Completed
+* Upcoming Assignments
+* Average Rating
+* Cancellations / No Shows
+
+#### **Skill Tags:**
+
+* E.g., “Wedding”, “Portrait”, “Drone”, “Event”, “Cinematic”, “Lightroom”
+
+#### **Portfolio Gallery:**
+
+* Optional: Upload images or link to online portfolio (Pixieset, IG, etc.)
+
+#### **Availability Schedule:**
+
+* Calendar view of their upcoming jobs, blocked dates, and holidays.
+* Manual block time feature for leaves/vacations.
+
+#### **Notes (Private)**
+
+* Admin-only notes, e.g. “Prefers natural light”, “Not suitable for early morning shoots”.
+
+---
+
+### 🔹 3. **Assign Job to Photographer**
+
+From the profile or booking, admin can assign jobs manually.
+
+**Options:**
+
+* Select Booking / Session
+* Auto-suggest based on availability
+* Allow multi-photographer assignment for large jobs
+
+---
+
+### 🔹 4. **Access Control & Portal Login**
+
+Manage photographer access to the system.
+
+**Toggle:**
+
+* Enable/Disable portal access
+* Set login email & temporary password
+* Role-based access (Photographer, Lead Photographer, Editor)
+
+**Permissions:**
+
+* Can view assigned sessions only
+* Can upload proofs/final photos
+* Can message clients (toggle on/off)
+
+---
+
+### 🔹 5. **Payment & Commission Tracking (Optional)**
+
+Track earnings per shoot if you pay per job.
+
+**Fields:**
+
+* Per-job rate or % commission
+* Auto-calculated payment due based on completed jobs
+* Mark jobs as “Paid” or “Pending”
+* Export payment log (PDF/CSV)
+
+---
+
+### 🔹 6. **Ratings & Feedback**
+
+View client feedback per session.
+
+* Ratings breakdown (1–5 stars)
+* Comments
+* Feedback trends over time
+* Flagged issues (if any)
+
+---
+
+### 🔹 7. **Documents & Contracts**
+
+Upload and manage staff-related documents.
+
+**Examples:**
+
+* IC/Passport copy
+* NDA
+* Studio agreement
+* Certifications
+
+---
+
+### 🔹 8. **Action Buttons (Top Right of Profile Page)**
+
+* 📝 Edit Photographer
+* 🚫 Deactivate
+* 🗑️ Delete (with confirmation)
+* 🔄 Reset Password
+* 📄 Download Profile PDF
+

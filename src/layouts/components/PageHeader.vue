@@ -35,21 +35,27 @@ const lastBreadcrumbItem = computed(() => {
       <SidebarTrigger class="-ml-1" />
       <Separator orientation="vertical" class="mr-2 h-4" />
       <Breadcrumb>
-        <div class="flex items-center gap-2">
-          <!-- Mobile view: Show only last breadcrumb item -->
-          <BreadcrumbList class="block md:hidden">
-            <BreadcrumbItem>
-              <BreadcrumbLink v-if="lastBreadcrumbItem?.action" :href="lastBreadcrumbItem.href">
-                {{ lastBreadcrumbItem?.label }}
-              </BreadcrumbLink>
-              <BreadcrumbLink v-else>
-                {{ lastBreadcrumbItem?.label }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-          
-          <!-- Desktop view: Show all breadcrumb items -->
-          <BreadcrumbList v-for="item in props.breadcrumb" :key="item.label" class="hidden md:block">
+        <!-- Mobile view: Show only last breadcrumb item -->
+        <BreadcrumbList class="flex md:hidden">
+          <BreadcrumbItem>
+            <BreadcrumbLink
+              v-if="lastBreadcrumbItem?.action"
+              :href="lastBreadcrumbItem.href"
+            >
+              {{ lastBreadcrumbItem?.label }}
+            </BreadcrumbLink>
+            <BreadcrumbLink v-else>
+              {{ lastBreadcrumbItem?.label }}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+
+        <!-- Desktop view: Show all breadcrumb items -->
+        <BreadcrumbList class="hidden md:flex">
+          <template
+            v-for="(item, index) in props.breadcrumb"
+            :key="item.label"
+          >
             <BreadcrumbItem>
               <BreadcrumbLink v-if="item.action" :href="item.href">
                 {{ item.label }}
@@ -58,11 +64,9 @@ const lastBreadcrumbItem = computed(() => {
                 {{ item.label }}
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator
-              v-if="item.count !== breadcrumb.length"
-            />
-          </BreadcrumbList>
-        </div>
+            <BreadcrumbSeparator v-if="index < props.breadcrumb.length - 1" />
+          </template>
+        </BreadcrumbList>
       </Breadcrumb>
     </div>
   </header>

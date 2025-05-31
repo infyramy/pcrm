@@ -1,0 +1,90 @@
+Here's a detailed breakdown of the **Affiliate System** settings and features from the **Admin** perspective for your system (e.g., *wpcrm*):
+
+---
+
+## 🎯 Affiliate System (Admin Panel)
+
+This module allows you to manage and track affiliate earnings and incentives given to people who refer clients to your studio or services.
+
+---
+
+### 1. **Set Commission (% or RM)**
+
+> Define how much affiliates earn for each successful referral or booking.
+
+**Options:**
+
+* **Global Commission Setting**
+
+  * Choose: **Percentage (%)** or **Fixed Amount (RM)**
+  * Example: 10% per booking OR RM50 per referred client.
+* **Tiered Commission (Optional)**
+
+  * Set different rates based on product, session type, or campaign.
+  * Example: RM30 for portrait sessions, RM80 for wedding packages.
+* **Per-Affiliate Override**
+
+  * Set a custom rate for specific affiliates (e.g., VIP promoters).
+
+---
+
+### 2. **View Commissions**
+
+> Track all referral earnings in a centralized dashboard.
+
+**Features:**
+
+* **Filter by Date, Affiliate Name, Status (Paid/Unpaid)**
+* **List View:**
+
+  * Affiliate Name
+  * Client Referred
+  * Booking Value
+  * Commission Earned
+  * Status (Paid/Unpaid)
+  * Booking Date
+* **Click to View Full Details**
+
+  * See which booking/session generated the commission.
+  * Breakdown of commission calculation.
+
+---
+
+### 3. **Mark as Paid**
+
+> Mark commissions as settled once transferred to the affiliate.
+
+**Features:**
+
+* **Bulk Selection** – Mark multiple commissions as paid in one go.
+* **Payment Method Selection** (Optional):
+
+  * Bank Transfer
+  * eWallet
+  * Manual
+* **Add Payment Note / Reference Number** – For tracking purposes.
+* Once marked as paid, timestamp is saved (e.g., “Paid on 31 May 2025, 2:15 PM”).
+
+---
+
+### 4. **Export Log (PDF/CSV)**
+
+> Export reports for record-keeping or accounting.
+
+**Options:**
+
+* **Date Range Filter** – Export commissions from a specific period.
+* **Choose Format**:
+
+  * **PDF** – Neatly formatted report (good for printing).
+  * **CSV** – For Excel or Google Sheets analysis.
+* **Fields in Export**:
+
+  * Affiliate Name
+  * Client Referred
+  * Booking ID
+  * Booking Amount
+  * Commission Rate & Value
+  * Payment Status
+  * Paid Date (if applicable)
+

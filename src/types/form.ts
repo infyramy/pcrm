@@ -124,4 +124,65 @@ export interface FormBuilder {
   }
   createdAt: Date
   updatedAt?: Date
+}
+
+// Form Response Types
+export interface FormResponseValue {
+  fieldId: string
+  fieldLabel: string
+  fieldType: FieldType
+  value: any
+  displayValue?: string
+}
+
+export interface FormResponse {
+  id: string
+  formId: string
+  submittedAt: Date
+  submittedBy?: {
+    id: string
+    name: string
+    email: string
+    ip?: string
+    userAgent?: string
+  }
+  values: FormResponseValue[]
+  status: 'pending' | 'reviewed' | 'archived' | 'new' | 'contacted' | 'quoted' | 'converted' | 'declined'
+  notes?: string
+  reviewedBy?: string
+  reviewedAt?: Date
+}
+
+export interface FormResponseSummary {
+  formId: string
+  formTitle: string
+  totalResponses: number
+  pendingResponses: number
+  reviewedResponses: number
+  archivedResponses: number
+  lastResponseAt?: Date
+  fieldsUsed: string[]
+}
+
+export interface FormResponseListResponse {
+  responses: FormResponse[]
+  total: number
+  page: number
+  limit: number
+  summary: FormResponseSummary
+}
+
+export interface CreateFormResponseRequest {
+  formId: string
+  values: Record<string, any>
+  submittedBy?: {
+    name?: string
+    email?: string
+  }
+}
+
+export interface UpdateFormResponseRequest {
+  status?: FormResponse['status']
+  notes?: string
+  reviewedBy?: string
 } 

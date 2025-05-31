@@ -26,6 +26,7 @@ import {
   ScrollTextIcon,
   MessageCircleIcon,
   HomeIcon,
+  InboxIcon,
 } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -79,6 +80,16 @@ const navigation = ref([
         title: "Form Fields",
         icon: EditIcon,
         url: `/studio/forms/${formId.value}/field-builder`,
+      },
+    ],
+  },
+  {
+    title: "Analytics & Responses",
+    items: [
+      {
+        title: "Responses",
+        icon: InboxIcon,
+        url: `/studio/forms/${formId.value}/responses`,
       },
     ],
   },
