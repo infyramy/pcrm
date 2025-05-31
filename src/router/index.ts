@@ -241,8 +241,7 @@ const router = createRouter({
     {
       path: "/studio/contacts/:id/whatsapp",
       name: "contact-whatsapp",
-      component: () =>
-        import("@/pages/studio/contacts/[id]/whatsapp.vue"),
+      component: () => import("@/pages/studio/contacts/[id]/whatsapp.vue"),
       meta: {
         layout: "dashboard",
         requiresAuth: true,
@@ -260,8 +259,125 @@ const router = createRouter({
     {
       path: "/studio/contacts/:id/projects",
       name: "contact-projects",
-      component: () =>
-        import("@/pages/studio/contacts/[id]/projects.vue"),
+      component: () => import("@/pages/studio/contacts/[id]/projects.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+
+    {
+      path: "/studio/affiliates",
+      name: "affiliates",
+      component: () => import("@/pages/studio/affiliates/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/affiliates/settings",
+      name: "affiliate-settings",
+      component: () => import("@/pages/studio/affiliates/settings.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/affiliates/:id",
+      name: "affiliate-detail",
+      component: () => import("@/pages/studio/affiliates/[id]/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/affiliates/:id/edit",
+      name: "affiliate-edit",
+      component: () => import("@/pages/studio/affiliates/[id]/edit.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/affiliates/:id/commissions",
+      name: "affiliate-commissions",
+      component: () => import("@/pages/studio/affiliates/[id]/commissions.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/photographers",
+      name: "photographers",
+      component: () => import("@/pages/studio/photographers/index.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/photographers/new",
+      name: "photographer-new",
+      component: () => import("@/pages/studio/photographers/new.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/photographers/:id/edit",
+      name: "photographer-edit",
+      component: () => import("@/pages/studio/photographers/[id]/edit.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/photographers/:id/assign-job",
+      name: "photographer-assign-job",
+      component: () => import("@/pages/studio/photographers/[id]/assign-job.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/photographers/:id/schedule",
+      name: "photographer-schedule",
+      component: () => import("@/pages/studio/photographers/[id]/schedule.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/photographers/:id/access",
+      name: "photographer-access",
+      component: () => import("@/pages/studio/photographers/[id]/access.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/photographers/:id/payments",
+      name: "photographer-payments",
+      component: () => import("@/pages/studio/photographers/[id]/payments.vue"),
+      meta: {
+        layout: "dashboard",
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/studio/settings",
+      name: "settings",
+      component: () => import("@/pages/studio/settings/index.vue"),
       meta: {
         layout: "dashboard",
         requiresAuth: true,

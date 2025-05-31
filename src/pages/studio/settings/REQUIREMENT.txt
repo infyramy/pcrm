@@ -1,0 +1,93 @@
+Here's a detailed breakdown of each settings point you've listed, especially relevant if you're building or configuring a **Photography Studio CRM System** like your *wpcrm*:
+
+---
+
+### 1. **Studio Info**
+
+This section stores your studio's essential details. It's used across the system (e.g. invoices, emails, contracts).
+
+**Includes:**
+
+* **Studio Name** – Displayed on invoices, client portals, emails.
+* **Business Registration Number** – Optional but useful for official documents.
+* **Studio Address** – Used on forms, invoices.
+* **Phone & Email** – Client contact reference.
+* **Website & Social Links** – Appear on portals or email footers.
+* **Timezone** – For correct scheduling of sessions.
+* **Studio Operating Hours** – Affects booking calendar availability.
+
+---
+
+### 2. **Branding**
+
+Customize the look and feel of your system and client portal.
+
+**Sections:**
+
+* **Logo Upload** – Studio logo shown on all public views (invoices, portals, emails).
+* **Primary & Secondary Colors** – Match your brand colors for UI elements (buttons, headers).
+* **Typography (Optional)** – Font styles for portal and PDF exports.
+* **Portal Styling Options**:
+
+  * **Client Portal Banner** – Optional image or cover on the dashboard.
+  * **Favicon** – Shown in browser tabs.
+
+This helps your studio maintain a **consistent, professional identity**.
+
+---
+
+### 3. **Invoice Defaults**
+
+Pre-set values to streamline your billing process.
+
+**Settings:**
+
+* **Default Payment Terms** – e.g., Due on receipt, Net 7, Net 30.
+* **Default Invoice Note** – Standard message at the bottom of every invoice.
+* **Currency & Locale** – E.g., MYR (RM), USD, etc.
+* **Invoice Prefix & Numbering Format** – e.g., `INV-2025-001`.
+* **Auto Send Invoice on Booking Confirmation** – Toggle on/off.
+* **Payment Options** – e.g., Bank Transfer, Stripe, FPX, etc.
+
+---
+
+### 4. **Taxes, Discounts**
+
+Define your financial rules for billing.
+
+**Details:**
+
+* **Tax Settings**:
+
+  * Enable/Disable tax.
+  * Set % (e.g., 6% SST).
+  * Name it (e.g., “Service Tax”).
+* **Discount Types**:
+
+  * **Flat Amount** or **Percentage**.
+  * Optional: Name presets like “New Client Discount”.
+* **Apply tax before/after discount** – Important for invoice math logic.
+
+These will apply automatically when creating quotes/invoices.
+
+---
+
+### 5. **Terms & Conditions**
+
+Legal & policy texts shown during booking, quotes, and invoice interactions.
+
+**Types:**
+
+* **General Terms & Conditions** – For all clients and forms (e.g., copyright, liability, cancellation policy).
+* **Booking Agreement** – Appears during session booking.
+* **Payment Policy** – E.g., Deposit requirements, refund policy.
+* **Contract Terms (Optional)** – Use in PDF or digital signing workflows.
+
+These can appear:
+
+* On the client portal
+* As a tickbox on booking forms
+* At the bottom of invoices/quotes
+* On printed/exported documents
+
+---

@@ -1,16 +1,15 @@
 import { defineStore } from "pinia";
 import { computed } from "vue";
-import { useAuthStore } from "./auth";
 import {
   LayoutDashboard,
   FolderKanban,
   Users,
-  Mail,
-  CreditCard,
   Calendar,
   FileText,
-  FileCode,
   Settings,
+  CalendarCheck,
+  Plus,
+  Camera,
 } from "lucide-vue-next";
 import type { Component } from "vue";
 
@@ -60,11 +59,35 @@ export const useNavigationStore = defineStore("navigation", () => {
           icon: Users,
           isActive: true,
         },
+        {
+          title: "Affiliates",
+          url: "/studio/affiliates",
+          icon: Users,
+          isActive: true,
+        },
+        {
+          title: "Photographers",
+          url: "/studio/photographers",
+          icon: Camera,
+          isActive: true,
+        },
       ],
     },
     {
       title: "Tools",
       menu: [
+        {
+          title: "Session Types",
+          url: "/studio/session-types",
+          icon: CalendarCheck,
+          isActive: true,
+        },
+        {
+          title: "Add Ons",
+          url: "/studio/add-ons",
+          icon: Plus,
+          isActive: true,
+        },
         {
           title: "Calendar",
           url: "/studio/calendar",
