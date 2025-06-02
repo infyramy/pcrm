@@ -79,17 +79,7 @@ const navigation = ref([
       {
         title: "Form Fields",
         icon: EditIcon,
-        url: `/studio/forms/${formId.value}/field-builder`,
-      },
-    ],
-  },
-  {
-    title: "Analytics & Responses",
-    items: [
-      {
-        title: "Responses",
-        icon: InboxIcon,
-        url: `/studio/forms/${formId.value}/responses`,
+        url: `/studio/forms/${formId.value}/field-builder-3`,
       },
     ],
   },

@@ -4,7 +4,9 @@
     <div class="space-y-4">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-foreground">Welcome to Your Form Workspace</h1>
+          <h1 class="text-3xl font-bold text-foreground">
+            Welcome to Your Form Workspace
+          </h1>
           <p class="text-lg text-muted-foreground mt-2">
             Complete the steps below to create and publish your form
           </p>
@@ -13,15 +15,15 @@
           <Badge variant="outline" class="px-3 py-1">
             Form ID: {{ formId }}
           </Badge>
-          <Badge 
+          <Badge
             :variant="formStatus === 'published' ? 'default' : 'secondary'"
             class="px-3 py-1"
           >
-            {{ formStatus === 'published' ? 'Published' : 'Draft' }}
+            {{ formStatus === "published" ? "Published" : "Draft" }}
           </Badge>
         </div>
       </div>
-      
+
       <!-- Overall Progress -->
       <div class="bg-card border rounded-lg p-6">
         <div class="flex items-center justify-between mb-4">
@@ -31,13 +33,14 @@
           </span>
         </div>
         <div class="w-full bg-muted rounded-full h-3 mb-2">
-          <div 
+          <div
             class="bg-primary h-3 rounded-full transition-all duration-500 ease-out"
             :style="{ width: `${progressPercentage}%` }"
           ></div>
         </div>
         <p class="text-sm text-muted-foreground">
-          {{ progressPercentage }}% complete - {{ remainingSteps }} steps remaining
+          {{ progressPercentage }}% complete - {{ remainingSteps }} steps
+          remaining
         </p>
       </div>
     </div>
@@ -53,37 +56,46 @@
             </div>
             <div>
               <CardTitle>Form Setup</CardTitle>
-              <p class="text-sm text-muted-foreground">Configure basic form information</p>
+              <p class="text-sm text-muted-foreground">
+                Configure basic form information
+              </p>
             </div>
           </div>
         </CardHeader>
         <CardContent class="space-y-4">
-          <div 
-            v-for="step in formSetupSteps" 
+          <div
+            v-for="step in formSetupSteps"
             :key="step.id"
             class="flex items-center gap-4 p-4 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
             @click="router.push(step.url)"
           >
             <div class="flex-shrink-0">
-              <div 
+              <div
                 v-if="step.completed"
                 class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
               >
                 <CheckIcon class="w-4 h-4 text-white" />
               </div>
-              <div 
+              <div
                 v-else
                 class="w-6 h-6 border-2 border-muted-foreground rounded-full flex items-center justify-center"
               >
-                <span class="text-xs font-medium text-muted-foreground">{{ step.id }}</span>
+                <span class="text-xs font-medium text-muted-foreground">{{
+                  step.id
+                }}</span>
               </div>
             </div>
             <div class="flex-1">
               <div class="flex items-center gap-2">
-                <component :is="step.icon" class="w-4 h-4 text-muted-foreground" />
+                <component
+                  :is="step.icon"
+                  class="w-4 h-4 text-muted-foreground"
+                />
                 <h4 class="font-medium">{{ step.title }}</h4>
               </div>
-              <p class="text-sm text-muted-foreground mt-1">{{ step.description }}</p>
+              <p class="text-sm text-muted-foreground mt-1">
+                {{ step.description }}
+              </p>
               <div v-if="!step.completed" class="mt-2">
                 <Badge variant="outline" class="text-xs">
                   {{ step.status }}
@@ -102,31 +114,37 @@
           <CardHeader>
             <div class="flex items-center gap-3">
               <div class="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
-                <EditIcon class="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <EditIcon
+                  class="w-5 h-5 text-purple-600 dark:text-purple-400"
+                />
               </div>
               <div>
                 <CardTitle>Form Builder</CardTitle>
-                <p class="text-sm text-muted-foreground">Design your form fields</p>
+                <p class="text-sm text-muted-foreground">
+                  Design your form fields
+                </p>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div 
+            <div
               class="flex items-center gap-4 p-4 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
-              @click="router.push(`/studio/forms/${formId}/builder`)"
+              @click="router.push(`/studio/forms/${formId}/field-builder-3`)"
             >
               <div class="flex-shrink-0">
-                <div 
+                <div
                   v-if="formBuilderCompleted"
                   class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
                 >
                   <CheckIcon class="w-4 h-4 text-white" />
                 </div>
-                <div 
+                <div
                   v-else
                   class="w-6 h-6 border-2 border-muted-foreground rounded-full flex items-center justify-center"
                 >
-                  <span class="text-xs font-medium text-muted-foreground">4</span>
+                  <span class="text-xs font-medium text-muted-foreground"
+                    >4</span
+                  >
                 </div>
               </div>
               <div class="flex-1">
@@ -135,12 +153,14 @@
                   <h4 class="font-medium">Form Fields</h4>
                 </div>
                 <p class="text-sm text-muted-foreground mt-1">
-                  {{ formBuilderCompleted ? 'Form fields configured' : 'Add and configure form fields' }}
+                  {{
+                    formBuilderCompleted
+                      ? "Form fields configured"
+                      : "Add and configure form fields"
+                  }}
                 </p>
                 <div v-if="!formBuilderCompleted" class="mt-2">
-                  <Badge variant="outline" class="text-xs">
-                    Required
-                  </Badge>
+                  <Badge variant="outline" class="text-xs"> Required </Badge>
                 </div>
               </div>
               <ChevronRightIcon class="w-4 h-4 text-muted-foreground" />
@@ -153,41 +173,52 @@
           <CardHeader>
             <div class="flex items-center gap-3">
               <div class="p-2 bg-orange-100 dark:bg-orange-900/20 rounded-lg">
-                <SettingsIcon class="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                <SettingsIcon
+                  class="w-5 h-5 text-orange-600 dark:text-orange-400"
+                />
               </div>
               <div>
                 <CardTitle>Configuration</CardTitle>
-                <p class="text-sm text-muted-foreground">Additional form settings</p>
+                <p class="text-sm text-muted-foreground">
+                  Additional form settings
+                </p>
               </div>
             </div>
           </CardHeader>
           <CardContent class="space-y-4">
-            <div 
-              v-for="step in configurationSteps" 
+            <div
+              v-for="step in configurationSteps"
               :key="step.id"
               class="flex items-center gap-4 p-4 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
               @click="router.push(step.url)"
             >
               <div class="flex-shrink-0">
-                <div 
+                <div
                   v-if="step.completed"
                   class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
                 >
                   <CheckIcon class="w-4 h-4 text-white" />
                 </div>
-                <div 
+                <div
                   v-else
                   class="w-6 h-6 border-2 border-muted-foreground rounded-full flex items-center justify-center"
                 >
-                  <span class="text-xs font-medium text-muted-foreground">{{ step.id }}</span>
+                  <span class="text-xs font-medium text-muted-foreground">{{
+                    step.id
+                  }}</span>
                 </div>
               </div>
               <div class="flex-1">
                 <div class="flex items-center gap-2">
-                  <component :is="step.icon" class="w-4 h-4 text-muted-foreground" />
+                  <component
+                    :is="step.icon"
+                    class="w-4 h-4 text-muted-foreground"
+                  />
                   <h4 class="font-medium">{{ step.title }}</h4>
                 </div>
-                <p class="text-sm text-muted-foreground mt-1">{{ step.description }}</p>
+                <p class="text-sm text-muted-foreground mt-1">
+                  {{ step.description }}
+                </p>
                 <div v-if="!step.completed" class="mt-2">
                   <Badge variant="outline" class="text-xs">
                     {{ step.status }}
@@ -204,10 +235,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { computed, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   FileTextIcon,
   CalendarIcon,
@@ -217,8 +248,8 @@ import {
   MessageCircleIcon,
   SettingsIcon,
   CheckIcon,
-  ChevronRightIcon
-} from 'lucide-vue-next';
+  ChevronRightIcon,
+} from "lucide-vue-next";
 
 const router = useRouter();
 const route = useRoute();
@@ -227,69 +258,69 @@ const route = useRoute();
 const formId = computed(() => route.params.id as string);
 
 // Mock form status - in real app, this would come from API
-const formStatus = ref('draft'); // 'draft' | 'published'
+const formStatus = ref("draft"); // 'draft' | 'published'
 
 // Mock completion status for each step - in real app, this would come from API
 const stepCompletionStatus = ref({
-  basic: false,        // Title & Description
-  sessions: false,     // Sessions
-  addons: false,       // Add-ons
-  builder: false,      // Form Fields
-  terms: false,        // Terms & Conditions
-  whatsapp: false      // WhatsApp & Redirect
+  basic: false, // Title & Description
+  sessions: false, // Sessions
+  addons: false, // Add-ons
+  builder: false, // Form Fields
+  terms: false, // Terms & Conditions
+  whatsapp: false, // WhatsApp & Redirect
 });
 
 // Form setup steps
 const formSetupSteps = computed(() => [
   {
     id: 1,
-    title: 'Title & Description',
-    description: 'Set your form title, description, and basic information',
+    title: "Title & Description",
+    description: "Set your form title, description, and basic information",
     icon: FileTextIcon,
-    url: `/studio/forms/${formId.value}/basic`,
+    url: `/studio/forms/${formId.value}/title`,
     completed: stepCompletionStatus.value.basic,
-    status: stepCompletionStatus.value.basic ? 'Completed' : 'Required'
+    status: stepCompletionStatus.value.basic ? "Completed" : "Required",
   },
   {
     id: 2,
-    title: 'Sessions',
-    description: 'Configure session settings and availability',
+    title: "Sessions",
+    description: "Configure session settings and availability",
     icon: CalendarIcon,
     url: `/studio/forms/${formId.value}/sessions`,
     completed: stepCompletionStatus.value.sessions,
-    status: stepCompletionStatus.value.sessions ? 'Completed' : 'Optional'
+    status: stepCompletionStatus.value.sessions ? "Completed" : "Optional",
   },
   {
     id: 3,
-    title: 'Add-ons',
-    description: 'Set up additional services and pricing',
+    title: "Add-ons",
+    description: "Set up additional services and pricing",
     icon: PlusIcon,
     url: `/studio/forms/${formId.value}/addons`,
     completed: stepCompletionStatus.value.addons,
-    status: stepCompletionStatus.value.addons ? 'Completed' : 'Optional'
-  }
+    status: stepCompletionStatus.value.addons ? "Completed" : "Optional",
+  },
 ]);
 
 // Configuration steps
 const configurationSteps = computed(() => [
   {
     id: 5,
-    title: 'Terms & Conditions',
-    description: 'Add legal terms and conditions for your form',
+    title: "Terms & Conditions",
+    description: "Add legal terms and conditions for your form",
     icon: ScrollTextIcon,
     url: `/studio/forms/${formId.value}/terms`,
     completed: stepCompletionStatus.value.terms,
-    status: stepCompletionStatus.value.terms ? 'Completed' : 'Optional'
+    status: stepCompletionStatus.value.terms ? "Completed" : "Optional",
   },
   {
     id: 6,
-    title: 'WhatsApp & Redirect',
-    description: 'Configure WhatsApp integration and redirect settings',
+    title: "WhatsApp & Redirect",
+    description: "Configure WhatsApp integration and redirect settings",
     icon: MessageCircleIcon,
     url: `/studio/forms/${formId.value}/whatsapp`,
     completed: stepCompletionStatus.value.whatsapp,
-    status: stepCompletionStatus.value.whatsapp ? 'Completed' : 'Optional'
-  }
+    status: stepCompletionStatus.value.whatsapp ? "Completed" : "Optional",
+  },
 ]);
 
 // Form builder completion status
@@ -301,7 +332,7 @@ const completedSteps = computed(() => {
   return Object.values(stepCompletionStatus.value).filter(Boolean).length;
 });
 const remainingSteps = computed(() => totalSteps.value - completedSteps.value);
-const progressPercentage = computed(() => 
+const progressPercentage = computed(() =>
   Math.round((completedSteps.value / totalSteps.value) * 100)
 );
 
@@ -313,37 +344,37 @@ const canPublish = computed(() => {
 // Next recommended steps
 const nextSteps = computed(() => {
   const steps = [];
-  
+
   if (!stepCompletionStatus.value.basic) {
     steps.push({
-      title: 'Complete Form Setup',
-      description: 'Add title and description to get started',
+      title: "Complete Form Setup",
+      description: "Add title and description to get started",
       icon: FileTextIcon,
-      url: `/studio/forms/${formId.value}/basic`
+      url: `/studio/forms/${formId.value}/basic`,
     });
   } else if (!stepCompletionStatus.value.builder) {
     steps.push({
-      title: 'Build Your Form',
-      description: 'Add form fields to collect information',
+      title: "Build Your Form",
+      description: "Add form fields to collect information",
       icon: EditIcon,
-      url: `/studio/forms/${formId.value}/builder`
+      url: `/studio/forms/${formId.value}/builder`,
     });
   } else if (!stepCompletionStatus.value.sessions) {
     steps.push({
-      title: 'Configure Sessions',
-      description: 'Set up session availability and booking',
+      title: "Configure Sessions",
+      description: "Set up session availability and booking",
       icon: CalendarIcon,
-      url: `/studio/forms/${formId.value}/sessions`
+      url: `/studio/forms/${formId.value}/sessions`,
     });
   } else if (!stepCompletionStatus.value.addons) {
     steps.push({
-      title: 'Add Services',
-      description: 'Include additional services and pricing',
+      title: "Add Services",
+      description: "Include additional services and pricing",
       icon: PlusIcon,
-      url: `/studio/forms/${formId.value}/addons`
+      url: `/studio/forms/${formId.value}/addons`,
     });
   }
-  
+
   return steps.slice(0, 3); // Show max 3 next steps
 });
 

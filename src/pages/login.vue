@@ -54,7 +54,29 @@ async function handleSubmit() {
       password: password.value,
     });
 
-    router.push("/studio/home");
+    // Get the redirect path from query parameters or use role-based default
+    const redirectPath = router.currentRoute.value.query.redirect as string;
+    if (redirectPath) {
+      router.push(redirectPath);
+    } else {
+      // Redirect based on user role
+      switch (authStore.user?.user_type) {
+        case "superadmin":
+          router.push("/superadmin/dashboard");
+          break;
+        case "studio":
+          router.push("/studio/home");
+          break;
+        case "photographer":
+          router.push("/photographer/dashboard");
+          break;
+        case "affiliate":
+          router.push("/affiliate/home");
+          break;
+        default:
+          router.push("/login");
+      }
+    }
   } catch (error: any) {
     console.log("error: ", error);
     toast.error(error.data?.message || "Invalid email or password");

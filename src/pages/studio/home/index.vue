@@ -331,10 +331,11 @@
               v-for="item in createItems"
               :key="item.type"
               class="group relative overflow-hidden border-2 border-border/50 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 cursor-pointer focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/30 hover:-translate-y-1"
+              :class="{'opacity-70 hover:opacity-80': item.comingSoon}"
               tabindex="0"
-              @click="handleCreateAction(item.type)"
-              @keydown.enter="handleCreateAction(item.type)"
-              @keydown.space.prevent="handleCreateAction(item.type)"
+              @click="item.comingSoon ? null : handleCreateAction(item.type)"
+              @keydown.enter="item.comingSoon ? null : handleCreateAction(item.type)"
+              @keydown.space.prevent="item.comingSoon ? null : handleCreateAction(item.type)"
             >
               <CardContent
                 class="p-6 flex flex-col items-center text-center space-y-4 relative"
@@ -362,6 +363,12 @@
                   <p class="text-sm text-muted-foreground leading-relaxed">
                     {{ item.description }}
                   </p>
+                  <span 
+                    v-if="item.comingSoon"
+                    class="inline-block mt-2 px-2.5 py-1 bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-medium rounded-full"
+                  >
+                    Coming Soon
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -417,6 +424,10 @@ import {
   CheckCircle,
   User,
   CreditCard,
+  XCircle,
+  Search,
+  Grid,
+  CheckSquare,
 } from "lucide-vue-next";
 import { LineChart } from "@/components/ui/chart-line";
 import { ref, computed, watch } from "vue";
@@ -652,9 +663,30 @@ const createItems = ref([
     title: "Create Form",
     description: "Build custom forms to gather client information",
     icon: ClipboardList,
+    comingSoon: false,
     iconColor: "text-orange-600 dark:text-orange-400",
     iconBg:
       "bg-gradient-to-br from-orange-50 to-orange-100/50 dark:from-orange-950/30 dark:to-orange-900/20 group-hover:from-orange-100 group-hover:to-orange-200/50 dark:group-hover:from-orange-900/40 dark:group-hover:to-orange-800/30",
+  },
+  {
+    type: "invoice",
+    title: "New Invoice",
+    description: "Generate and send invoices to your clients",
+    icon: FileText,
+    comingSoon: true,
+    iconColor: "text-blue-600 dark:text-blue-400",
+    iconBg:
+      "bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20 group-hover:from-blue-100 group-hover:to-blue-200/50 dark:group-hover:from-blue-900/40 dark:group-hover:to-blue-800/30",
+  },
+  {
+    type: "client",
+    title: "Add Client",
+    description: "Register new client details and information",
+    icon: User,
+    comingSoon: true,
+    iconColor: "text-green-600 dark:text-green-400",
+    iconBg:
+      "bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-green-900/20 group-hover:from-green-100 group-hover:to-green-200/50 dark:group-hover:from-green-900/40 dark:group-hover:to-green-800/30",
   },
 ]);
 
@@ -676,10 +708,10 @@ watch(selectedPeriod, (newPeriod) => {
 // Handle create action clicks
 const handleCreateAction = (actionType: string) => {
   console.log(`Creating new ${actionType}`);
-  // isDialogOpen.value = false;
-  // Add navigation logic here
-
-  router.push("/studio/form/create");
+  isDialogOpen.value = false;
+  
+  // For now, we only navigate to form creation
+  router.push("/studio/forms/create");
 };
 </script>
 

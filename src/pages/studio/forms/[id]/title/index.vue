@@ -159,7 +159,7 @@
     </Card>
 
     <!-- Tips Card -->
-    <Card>
+    <!-- <Card>
       <CardHeader>
         <div class="flex items-center gap-3">
           <div class="p-2 bg-amber-100 dark:bg-amber-900/20 rounded-lg">
@@ -197,7 +197,7 @@
           </li>
         </ul>
       </CardContent>
-    </Card>
+    </Card> -->
   </div>
 </template>
 
