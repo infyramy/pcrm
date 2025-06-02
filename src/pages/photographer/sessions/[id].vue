@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -45,7 +44,7 @@ const breadcrumbs = [
   {
     count: 2,
     label: "Details",
-    href: '/photographer/sessions/' + route.params.id,
+    href: "/photographer/sessions/" + route.params.id,
     action: false,
   },
 ];
@@ -103,7 +102,8 @@ const session = ref<Session>({
     status: "pending",
   },
   notes: "Outdoor ceremony, indoor reception",
-  specialInstructions: "- Bride prefers natural light photos\n- Group photos after ceremony\n- Special focus on elderly family members",
+  specialInstructions:
+    "- Bride prefers natural light photos\n- Group photos after ceremony\n- Special focus on elderly family members",
 });
 
 function getStatusBadgeVariant(status: Session["status"]) {
@@ -150,9 +150,17 @@ function formatCurrency(amount: number) {
 
 function getGoogleMapsUrl(location: Session["location"]) {
   if (location.coordinates) {
-    return 'https://www.google.com/maps/search/?api=1&query=' + location.coordinates.lat + ',' + location.coordinates.lng;
+    return (
+      "https://www.google.com/maps/search/?api=1&query=" +
+      location.coordinates.lat +
+      "," +
+      location.coordinates.lng
+    );
   }
-  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(location.address);
+  return (
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(location.address)
+  );
 }
 
 function updateStatus(newStatus: Session["status"]) {
@@ -162,7 +170,7 @@ function updateStatus(newStatus: Session["status"]) {
 
 function submitUploadLink() {
   if (!uploadLink.value) return;
-  
+
   session.value.status = "uploaded";
   session.value.uploadLink = uploadLink.value;
   uploadDialogOpen.value = false;
@@ -207,12 +215,7 @@ function goBack() {
       <div class="flex items-center justify-between">
         <div class="space-y-1">
           <div class="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              @click="goBack"
-              class="h-8 w-8"
-            >
+            <Button variant="ghost" size="icon" @click="goBack" class="h-8 w-8">
               <ChevronLeft class="h-4 w-4" />
             </Button>
             <h2 class="text-2xl font-bold">Session Details</h2>
@@ -321,7 +324,10 @@ function goBack() {
               </div>
               <div v-if="session.specialInstructions" class="space-y-2">
                 <h4 class="font-medium">Special Instructions</h4>
-                <pre class="whitespace-pre-wrap text-sm text-muted-foreground">{{ session.specialInstructions }}</pre>
+                <pre
+                  class="whitespace-pre-wrap text-sm text-muted-foreground"
+                  >{{ session.specialInstructions }}</pre
+                >
               </div>
             </div>
           </CardContent>
@@ -353,7 +359,10 @@ function goBack() {
                 <Dialog v-model:open="uploadDialogOpen">
                   <DialogTrigger asChild>
                     <Button
-                      v-if="['completed'].includes(session.status) && !session.uploadLink"
+                      v-if="
+                        ['completed'].includes(session.status) &&
+                        !session.uploadLink
+                      "
                       class="w-full"
                     >
                       Upload Photos
@@ -363,7 +372,8 @@ function goBack() {
                     <DialogHeader>
                       <DialogTitle>Upload Photos</DialogTitle>
                       <DialogDescription>
-                        Enter the link to your uploaded photos (Google Drive, Dropbox, etc.)
+                        Enter the link to your uploaded photos (Google Drive,
+                        Dropbox, etc.)
                       </DialogDescription>
                     </DialogHeader>
                     <div class="space-y-4 py-4">
@@ -381,10 +391,7 @@ function goBack() {
                       >
                         Cancel
                       </Button>
-                      <Button
-                        @click="submitUploadLink"
-                        :disabled="!uploadLink"
-                      >
+                      <Button @click="submitUploadLink" :disabled="!uploadLink">
                         Submit
                       </Button>
                     </DialogFooter>
@@ -411,4 +418,4 @@ function goBack() {
       </div>
     </div>
   </div>
-</template> 
+</template>
