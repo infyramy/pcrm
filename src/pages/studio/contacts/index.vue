@@ -329,7 +329,7 @@ const contacts = ref<Contact[]>([
     email: "david.wong@email.com",
     phone: "+60112233445",
     company: null,
-    status: "client",
+    status: "lead",
     source: "google_ads",
     createdAt: new Date("2024-02-01"),
     lastContactDate: new Date("2024-02-03"),
@@ -347,12 +347,12 @@ const contacts = ref<Contact[]>([
     email: "contact@creativesolutions.com",
     phone: "+60134567890",
     company: "Creative Solutions Sdn Bhd",
-    status: "client",
+    status: "lead",
     source: "website",
     createdAt: new Date("2024-01-05"),
     lastContactDate: new Date("2024-01-30"),
-    projectsCount: 1,
-    totalValue: 5000,
+    projectsCount: 0,
+    totalValue: 0,
     tags: [{ id: "commercial", name: "Commercial", color: "purple" }],
     notes: "Product launch photography project in planning",
   },
@@ -375,7 +375,14 @@ const contacts = ref<Contact[]>([
 
 // Utility functions
 const getStatusVariant = (status: Contact["status"]) => {
-  return "default" as const; // All contacts are clients now
+  switch (status) {
+    case "lead":
+      return "secondary" as const;
+    case "client":
+      return "default" as const;
+    default:
+      return "default" as const;
+  }
 };
 
 const formatDate = (date: Date) => {

@@ -4,12 +4,14 @@ import type { SessionType } from "@/types/form";
 export interface CreateSessionTypeRequest {
   name: string;
   price: number;
+  shooterPrice: number;
   description?: string;
 }
 
 export interface UpdateSessionTypeRequest {
   name?: string;
   price?: number;
+  shooterPrice?: number;
   description?: string;
   isActive?: boolean;
 }
@@ -33,6 +35,7 @@ export const sessionTypeService = {
         id: "1",
         name: "Nikah",
         price: 1500,
+        shooterPrice: 500,
         description: "Traditional Islamic wedding ceremony photography",
         isActive: true,
         createdAt: new Date("2024-01-01"),
@@ -41,6 +44,7 @@ export const sessionTypeService = {
         id: "2",
         name: "Sanding",
         price: 2000,
+        shooterPrice: 700,
         description: "Malay traditional wedding ceremony photography",
         isActive: true,
         createdAt: new Date("2024-01-02"),
@@ -49,6 +53,7 @@ export const sessionTypeService = {
         id: "3",
         name: "Outdoor",
         price: 1200,
+        shooterPrice: 400,
         description: "Outdoor photography session",
         isActive: true,
         createdAt: new Date("2024-01-03"),
@@ -57,6 +62,7 @@ export const sessionTypeService = {
         id: "4",
         name: "Engagement",
         price: 800,
+        shooterPrice: 300,
         description: "Pre-wedding engagement photography",
         isActive: true,
         createdAt: new Date("2024-01-04"),

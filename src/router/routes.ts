@@ -50,6 +50,39 @@ export const publicRoutes: RouteRecordRaw[] = [
   },
 ];
 
+// Client routes (public access with code-based authentication)
+export const clientRoutes: RouteRecordRaw[] = [
+  {
+    path: "/client/login",
+    name: "client-login",
+    component: () => import("@/pages/client/login/index.vue"),
+    meta: {
+      layout: "blank",
+      requiresAuth: false,
+    },
+  },
+  {
+    path: "/client/home",
+    name: "client-home",
+    component: () => import("@/pages/client/home/index.vue"),
+    meta: {
+      layout: "client",
+      requiresAuth: false,
+      requiresClientAuth: true,
+    },
+  },
+  {
+    path: "/client/projects/:id",
+    name: "client-project-details",
+    component: () => import("@/pages/client/projects/[id]/index.vue"),
+    meta: {
+      layout: "client",
+      requiresAuth: false,
+      requiresClientAuth: true,
+    },
+  },
+];
+
 // Superadmin routes
 export const superadminRoutes: RouteRecordRaw[] = [
   {
@@ -502,6 +535,35 @@ export const studioRoutes: RouteRecordRaw[] = [
           roles: ["studio"],
         },
       },
+      {
+        path: "sessions",
+        name: "studio-sessions",
+        component: () => import("@/pages/studio/sessions/index.vue"),
+        meta: {
+          layout: "dashboard",
+          requiresAuth: true,
+          roles: ["studio"],
+        },
+      },
+      {
+        path: "addons",
+        name: "studio-addons",
+        component: () => import("@/pages/studio/addons/index.vue"),
+        meta: {
+          layout: "dashboard",
+          requiresAuth: true,
+          roles: ["studio"],
+        },
+      },
+      {
+        path: "/billings",
+        name: "billings",
+        component: () => import("@/pages/billings/index.vue"),
+        meta: {
+          layout: "dashboard",
+          requiresAuth: true,
+        },
+      },
     ],
   },
 ];
@@ -685,6 +747,16 @@ export const affiliateRoutes: RouteRecordRaw[] = [
           roles: ["affiliate"],
         },
       },
+      {
+        path: "payouts",
+        name: "affiliate-payouts",
+        component: () => import("@/pages/affiliate/payouts/index.vue"),
+        meta: {
+          layout: "dashboard",
+          requiresAuth: true,
+          roles: ["affiliate"],
+        },
+      },
     ],
   },
 ];
@@ -712,6 +784,37 @@ export const rootRedirect: RouteRecordRaw = {
   },
 };
 
+// Common authenticated routes
+export const commonAuthRoutes: RouteRecordRaw[] = [
+  {
+    path: "/notifications",
+    name: "notifications",
+    component: () => import("@/pages/notifications/index.vue"),
+    meta: {
+      layout: "dashboard",
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: () => import("@/pages/profile/index.vue"),
+    meta: {
+      layout: "dashboard",
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/billings",
+    name: "billings",
+    component: () => import("@/pages/billings/index.vue"),
+    meta: {
+      layout: "dashboard",
+      requiresAuth: true,
+    },
+  },
+];
+
 // Not found route
 export const notFoundRoute: RouteRecordRaw = {
   path: "/:pathMatch(.*)*",
@@ -727,9 +830,11 @@ export const notFoundRoute: RouteRecordRaw = {
 export const routes: RouteRecordRaw[] = [
   rootRedirect,
   ...publicRoutes,
+  ...clientRoutes,
   ...superadminRoutes,
   ...studioRoutes,
   ...photographerRoutes,
   ...affiliateRoutes,
+  ...commonAuthRoutes,
   notFoundRoute,
 ];

@@ -19,26 +19,34 @@
           Manage booking forms, client questionnaires, and wedding details
         </p>
       </div>
-      <Button @click="createNewForm" class="flex items-center gap-2">
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
-        Create New Form
-      </Button>
+      <div class="flex items-center gap-3">
+        <!-- View toggle -->
+        <Tabs v-model="viewMode" class="">
+          <TabsList class="grid w-full grid-cols-2">
+            <TabsTrigger value="table">
+              <div class="flex items-center">
+                <LayoutGridIcon class="w-4 h-4 mr-1" />
+                Table
+              </div>
+            </TabsTrigger>
+            <TabsTrigger value="card" class="flex items-center">
+              <div class="flex items-center">
+                <LayoutList class="w-4 h-4 mr-1" />
+                Cards
+              </div>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Button @click="createNewForm" class="flex items-center gap-2">
+          <PlusIcon class="w-4 h-4" />
+          Create New Form
+        </Button>
+      </div>
     </div>
 
     <!-- DataTable Implementation -->
     <DataTable
+      v-if="viewMode === 'table'"
       :data="forms"
       :columns="tableColumns"
       :show-numbering="true"
@@ -79,68 +87,20 @@
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button variant="ghost" size="sm" class="h-8 w-8 p-0">
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zM12 13a1 1 0 110-2 1 1 0 010 2zM12 20a1 1 0 110-2 1 1 0 010 2z"
-                  />
-                </svg>
+                <MoreVerticalIcon class="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem @click="openWorkspace(item.id)">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                  />
-                </svg>
+                <LayoutIcon class="w-4 h-4 mr-2" />
                 Workspace
               </DropdownMenuItem>
               <DropdownMenuItem @click="viewResponses(item.id)">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                  />
-                </svg>
+                <FileTextIcon class="w-4 h-4 mr-2" />
                 Responses
               </DropdownMenuItem>
               <DropdownMenuItem @click="duplicateForm(item.id)">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
+                <CopyIcon class="w-4 h-4 mr-2" />
                 Duplicate
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -148,19 +108,7 @@
                 @click="deleteForm(item.id)"
                 class="text-red-600"
               >
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
+                <TrashIcon class="w-4 h-4 mr-2" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -171,19 +119,7 @@
       <!-- Custom empty state -->
       <template #empty-state>
         <div class="text-center py-8">
-          <svg
-            class="w-12 h-12 mx-auto text-gray-400 mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
+          <FileTextIcon class="w-12 h-12 mx-auto text-gray-400 mb-4" />
           <h3 class="text-lg font-medium text-gray-900 mb-2">
             No wedding forms yet
           </h3>
@@ -195,6 +131,150 @@
         </div>
       </template>
     </DataTable>
+
+    <!-- Card View Implementation -->
+    <div v-else-if="viewMode === 'card'" class="space-y-6">
+      <!-- Loading state -->
+      <div v-if="isLoading" class="grid place-items-center py-12">
+        <div class="flex flex-col items-center">
+          <svg
+            class="animate-spin h-8 w-8 text-primary mb-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <p class="text-gray-600">Loading forms...</p>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div v-else-if="forms.length === 0" class="text-center py-8">
+        <FileTextIcon class="w-12 h-12 mx-auto text-gray-400 mb-4" />
+        <h3 class="text-lg font-medium text-gray-900 mb-2">
+          No wedding forms yet
+        </h3>
+        <p class="text-gray-500 mb-4">
+          Create your first wedding photography form to start collecting client
+          information
+        </p>
+        <Button @click="createNewForm">Create Wedding Form</Button>
+      </div>
+
+      <!-- Card grid -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <Card
+          v-for="form in forms"
+          :key="form.id"
+          class="border hover:shadow-sm transition-all duration-200"
+        >
+          <CardContent class="p-5">
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-lg font-medium text-foreground">
+                {{ form.title }}
+              </h3>
+              <Badge
+                :variant="getStatusVariant(form.status)"
+                class="capitalize"
+              >
+                {{ form.status }}
+              </Badge>
+            </div>
+
+            <!-- Description -->
+            <p class="text-gray-600 text-sm mb-4">
+              {{ form.description || "No description provided" }}
+            </p>
+
+            <!-- Info -->
+            <div
+              class="flex justify-between items-center mb-4 text-sm text-gray-500"
+            >
+              <div class="capitalize">{{ form.type }}</div>
+              <div>{{ formatDate(form.createdAt) }}</div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-between items-center pt-3 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                @click="viewResponses(form.id)"
+              >
+                <FileTextIcon class="w-4 h-4 mr-2" />
+                Responses
+              </Button>
+
+              <div class="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  @click="openWorkspace(form.id)"
+                >
+                  <LayoutIcon class="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  @click="duplicateForm(form.id)"
+                >
+                  <CopyIcon class="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  class="text-red-600"
+                  @click="deleteForm(form.id)"
+                >
+                  <TrashIcon class="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <!-- Pagination -->
+      <div v-if="forms.length > 0" class="flex justify-center mt-6">
+        <div class="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="currentPage <= 1"
+            @click="handlePageChange(currentPage - 1)"
+          >
+            <ChevronLeftIcon class="h-4 w-4" />
+          </Button>
+
+          <span class="text-sm">
+            Page {{ currentPage }} of {{ Math.ceil(totalForms / pageSize) }}
+          </span>
+
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="currentPage >= Math.ceil(totalForms / pageSize)"
+            @click="handlePageChange(currentPage + 1)"
+          >
+            <ChevronRightIcon class="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -213,55 +293,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LoadingPage } from "@/components/ui/loading";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  PlusIcon,
+  LayoutIcon,
+  FileTextIcon,
+  CopyIcon,
+  TrashIcon,
+  MoreVerticalIcon,
+  LayoutGridIcon,
+  LayoutList,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "lucide-vue-next";
 import type { Form } from "@/types/form";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const router = useRouter();
 
 // Loading state for workspace setup
 const isLoadingWorkspace = ref(false);
-
-const breadcrumbs = [
-  {
-    count: 1,
-    label: "Forms",
-    href: "/studio/form",
-    action: false,
-  },
-];
-
-// Table column definitions
-const tableColumns: DataTableColumn<Form>[] = [
-  {
-    key: "title",
-    title: "Form Title",
-    sortable: true,
-    filterable: true,
-  },
-  {
-    key: "type",
-    title: "Type",
-    sortable: true,
-    filterable: true,
-  },
-  {
-    key: "createdAt",
-    title: "Created At",
-    sortable: true,
-    format: "datetime",
-  },
-  {
-    key: "status",
-    title: "Status",
-    sortable: true,
-    filterable: true,
-  },
-  {
-    key: "actions",
-    title: "Actions",
-    headerClass: "text-right",
-    cellClass: "text-right",
-  },
-];
+const isLoading = ref(false);
+const viewMode = ref<"table" | "card">("table");
+const currentPage = ref(1);
+const pageSize = ref(10);
 
 // Mock data - replace with actual API call
 const forms = ref<Form[]>([
@@ -314,6 +369,50 @@ const forms = ref<Form[]>([
     status: "archived",
   },
 ]);
+const totalForms = ref(forms.value.length);
+
+const breadcrumbs = [
+  {
+    count: 1,
+    label: "Forms",
+    href: "/studio/form",
+    action: false,
+  },
+];
+
+// Table column definitions
+const tableColumns: DataTableColumn<Form>[] = [
+  {
+    key: "title",
+    title: "Form Title",
+    sortable: true,
+    filterable: true,
+  },
+  {
+    key: "type",
+    title: "Type",
+    sortable: true,
+    filterable: true,
+  },
+  {
+    key: "createdAt",
+    title: "Created At",
+    sortable: true,
+    format: "datetime",
+  },
+  {
+    key: "status",
+    title: "Status",
+    sortable: true,
+    filterable: true,
+  },
+  {
+    key: "actions",
+    title: "Actions",
+    headerClass: "text-right",
+    cellClass: "text-right",
+  },
+];
 
 // Utility functions
 const getStatusVariant = (status: Form["status"]) => {
@@ -329,6 +428,14 @@ const getStatusVariant = (status: Form["status"]) => {
     default:
       return "outline";
   }
+};
+
+const formatDate = (date: Date) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 };
 
 // Actions
@@ -390,11 +497,14 @@ const deleteForm = (formId: string) => {
 
 // DataTable event handlers
 const handlePageChange = (page: number) => {
+  currentPage.value = page;
   console.log("Page changed to:", page);
 };
 
-const handlePageSizeChange = (pageSize: number) => {
-  console.log("Page size changed to:", pageSize);
+const handlePageSizeChange = (size: number) => {
+  pageSize.value = size;
+  currentPage.value = 1;
+  console.log("Page size changed to:", size);
 };
 
 const handleSort = (

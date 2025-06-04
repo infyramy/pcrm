@@ -79,14 +79,6 @@
               <FileTextIcon class="w-4 h-4" />
               Create Invoice
             </Button>
-            <Button
-              @click="showAdminModal = true"
-              variant="outline"
-              class="flex items-center gap-2"
-            >
-              <SettingsIcon class="w-4 h-4" />
-              Admin Actions
-            </Button>
           </div>
         </div>
       </Card>
@@ -635,7 +627,6 @@ import {
   FileTextIcon,
   ImageIcon,
   NotebookIcon,
-  SettingsIcon,
   PlusIcon,
   UserPlusIcon,
   XIcon,

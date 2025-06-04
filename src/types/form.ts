@@ -2,6 +2,7 @@ export interface SessionType {
   id: string
   name: string
   price: number
+  shooterPrice: number
   description?: string
   isActive: boolean
   createdAt: Date

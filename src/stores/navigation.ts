@@ -71,6 +71,12 @@ export const useNavigationStore = defineStore("navigation", () => {
           icon: BarChart3,
           isActive: true,
         },
+        {
+          title: "Billing",
+          url: "/billings",
+          icon: Wallet,
+          isActive: true,
+        },
       ],
     },
     {
@@ -138,14 +144,14 @@ export const useNavigationStore = defineStore("navigation", () => {
       title: "Tools",
       menu: [
         {
-          title: "Session Types",
-          url: "/studio/session-types",
+          title: "Sessions",
+          url: "/studio/sessions",
           icon: CalendarCheck,
           isActive: true,
         },
         {
           title: "Add Ons",
-          url: "/studio/add-ons",
+          url: "/studio/addons",
           icon: Plus,
           isActive: true,
         },
@@ -224,8 +230,8 @@ export const useNavigationStore = defineStore("navigation", () => {
           isActive: true,
         },
         {
-          title: "Earnings",
-          url: "/affiliate/earnings",
+          title: "Payouts",
+          url: "/affiliate/payouts",
           icon: Wallet,
           isActive: true,
         },

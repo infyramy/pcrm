@@ -68,7 +68,7 @@ async function handleSubmit() {
           router.push("/studio/home");
           break;
         case "photographer":
-          router.push("/photographer/dashboard");
+          router.push("/photographer/home");
           break;
         case "affiliate":
           router.push("/affiliate/home");
