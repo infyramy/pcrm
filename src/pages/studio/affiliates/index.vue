@@ -12,14 +12,14 @@
     <!-- Page Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-2xl font-semibold text-gray-900">Affiliate System</h1>
+        <h1 class="text-2xl font-semibold text-gray-900">Affiliate</h1>
         <p class="text-sm text-gray-600 mt-1">
           Manage affiliate commissions and track referral earnings
         </p>
       </div>
       <div class="flex items-center gap-2">
-        <Button 
-          @click="goToSettings" 
+        <Button
+          @click="goToSettings"
           variant="outline"
           class="flex items-center gap-2"
         >
@@ -189,202 +189,191 @@
     </div>
 
     <!-- Affiliates Table -->
-    <Card>
-      <CardHeader>
-        <CardTitle>Affiliates</CardTitle>
-        <CardDescription>Manage your affiliate partners and their commission rates</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable
-          :data="affiliates"
-          :columns="affiliateColumns"
-          :show-numbering="true"
-          :page-size="10"
-          :page-size-options="[5, 10, 25, 50]"
-          row-key="id"
-          @update:page="handlePageChange"
-          @update:page-size="handlePageSizeChange"
-          @update:sort="handleSort"
-          @update:filters="handleFilters"
+
+    <DataTable
+      :data="affiliates"
+      :columns="affiliateColumns"
+      :show-numbering="true"
+      :page-size="10"
+      :page-size-options="[5, 10, 25, 50]"
+      row-key="id"
+      @update:page="handlePageChange"
+      @update:page-size="handlePageSizeChange"
+      @update:sort="handleSort"
+      @update:filters="handleFilters"
+      :loading="isLoading"
+    >
+      <!-- Custom template for name column -->
+      <template #cell-name="{ item }">
+        <div>
+          <div class="font-semibold text-gray-900">{{ item.name }}</div>
+          <div class="text-sm text-gray-500">{{ item.email }}</div>
+          <div class="text-xs text-gray-400">Code: {{ item.referralCode }}</div>
+        </div>
+      </template>
+
+      <!-- Custom template for commission column -->
+      <template #cell-commission="{ item }">
+        <div class="text-sm">
+          <div class="font-medium">
+            {{
+              item.commissionType === "percentage"
+                ? `${item.commissionRate}%`
+                : `RM ${item.commissionRate}`
+            }}
+          </div>
+          <div class="text-gray-500 capitalize">
+            {{ item.commissionType }}
+          </div>
+        </div>
+      </template>
+
+      <!-- Custom template for earnings column -->
+      <template #cell-earnings="{ item }">
+        <div class="text-sm">
+          <div class="font-medium text-green-600">
+            RM {{ item.totalCommissionsEarned.toLocaleString() }}
+          </div>
+          <div class="text-gray-500">{{ item.totalReferrals }} referrals</div>
+        </div>
+      </template>
+
+      <!-- Custom template for pending column -->
+      <template #cell-pending="{ item }">
+        <div class="text-sm">
+          <div class="font-medium text-orange-600">
+            RM {{ item.unpaidCommissions.toLocaleString() }}
+          </div>
+        </div>
+      </template>
+
+      <!-- Custom template for status column -->
+      <template #cell-status="{ item }">
+        <Badge
+          :variant="getAffiliateStatusVariant(item.status)"
+          class="capitalize"
         >
-          <!-- Custom template for name column -->
-          <template #cell-name="{ item }">
-            <div>
-              <div class="font-semibold text-gray-900">{{ item.name }}</div>
-              <div class="text-sm text-gray-500">{{ item.email }}</div>
-              <div class="text-xs text-gray-400">
-                Code: {{ item.referralCode }}
-              </div>
-            </div>
-          </template>
+          {{ item.status }}
+        </Badge>
+      </template>
 
-          <!-- Custom template for commission column -->
-          <template #cell-commission="{ item }">
-            <div class="text-sm">
-              <div class="font-medium">
-                {{
-                  item.commissionType === "percentage"
-                    ? `${item.commissionRate}%`
-                    : `RM ${item.commissionRate}`
-                }}
-              </div>
-              <div class="text-gray-500 capitalize">
-                {{ item.commissionType }}
-              </div>
-            </div>
-          </template>
+      <!-- Custom template for last activity column -->
+      <template #cell-lastActivity="{ item }">
+        <div class="text-sm">
+          <div v-if="item.lastActivity" class="font-medium">
+            {{ formatDate(item.lastActivity) }}
+          </div>
+          <div v-else class="text-gray-400">Never</div>
+        </div>
+      </template>
 
-          <!-- Custom template for earnings column -->
-          <template #cell-earnings="{ item }">
-            <div class="text-sm">
-              <div class="font-medium text-green-600">
-                RM {{ item.totalCommissionsEarned.toLocaleString() }}
-              </div>
-              <div class="text-gray-500">
-                {{ item.totalReferrals }} referrals
-              </div>
-            </div>
-          </template>
+      <!-- Custom template for actions column -->
+      <template #cell-actions="{ item }">
+        <div class="flex justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="ghost" size="sm" class="h-8 w-8 p-0">
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zM12 13a1 1 0 110-2 1 1 0 010 2zM12 20a1 1 0 110-2 1 1 0 010 2z"
+                  />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem @click="viewAffiliate(item.id)">
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="editAffiliate(item.id)">
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+                Edit Affiliate
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="viewCommissions(item.id)">
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                  />
+                </svg>
+                View Commissions
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </template>
 
-          <!-- Custom template for pending column -->
-          <template #cell-pending="{ item }">
-            <div class="text-sm">
-              <div class="font-medium text-orange-600">
-                RM {{ item.unpaidCommissions.toLocaleString() }}
-              </div>
-            </div>
-          </template>
-
-          <!-- Custom template for status column -->
-          <template #cell-status="{ item }">
-            <Badge
-              :variant="getAffiliateStatusVariant(item.status)"
-              class="capitalize"
-            >
-              {{ item.status }}
-            </Badge>
-          </template>
-
-          <!-- Custom template for last activity column -->
-          <template #cell-lastActivity="{ item }">
-            <div class="text-sm">
-              <div v-if="item.lastActivity" class="font-medium">
-                {{ formatDate(item.lastActivity) }}
-              </div>
-              <div v-else class="text-gray-400">Never</div>
-            </div>
-          </template>
-
-          <!-- Custom template for actions column -->
-          <template #cell-actions="{ item }">
-            <div class="flex justify-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                  <Button variant="ghost" size="sm" class="h-8 w-8 p-0">
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zM12 13a1 1 0 110-2 1 1 0 010 2zM12 20a1 1 0 110-2 1 1 0 010 2z"
-                      />
-                    </svg>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem @click="viewAffiliate(item.id)">
-                    <svg
-                      class="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    View Details
-                  </DropdownMenuItem>
-                  <DropdownMenuItem @click="editAffiliate(item.id)">
-                    <svg
-                      class="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                    Edit Affiliate
-                  </DropdownMenuItem>
-                  <DropdownMenuItem @click="viewCommissions(item.id)">
-                    <svg
-                      class="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                      />
-                    </svg>
-                    View Commissions
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </template>
-
-          <!-- Custom empty state -->
-          <template #empty-state>
-            <div class="text-center py-8">
-              <svg
-                class="w-12 h-12 mx-auto text-gray-400 mb-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <h3 class="text-lg font-medium text-gray-900 mb-2">
-                No affiliates yet
-              </h3>
-              <p class="text-gray-500 mb-4">
-                Start building your affiliate network by adding your first
-                affiliate
-              </p>
-              <Button @click="addNewAffiliate">Add Your First Affiliate</Button>
-            </div>
-          </template>
-        </DataTable>
-      </CardContent>
-    </Card>
+      <!-- Custom empty state -->
+      <template #empty-state>
+        <div class="text-center py-8">
+          <svg
+            class="w-12 h-12 mx-auto text-gray-400 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">
+            No affiliates yet
+          </h3>
+          <p class="text-gray-500 mb-4">
+            Start building your affiliate network by adding your first affiliate
+          </p>
+          <Button @click="addNewAffiliate">Add Your First Affiliate</Button>
+        </div>
+      </template>
+    </DataTable>
 
     <!-- Add Affiliate Dialog -->
     <Dialog v-model:open="showAddDialog">
@@ -452,7 +441,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Breadcrumb from "@/layouts/components/PageHeader.vue";
 import { Button } from "@/components/ui/button";
@@ -499,6 +488,7 @@ const router = useRouter();
 
 // Loading state for workspace setup
 const isLoadingWorkspace = ref(false);
+const isLoading = ref(false);
 
 // Dialog states
 const showAddDialog = ref(false);
@@ -642,6 +632,31 @@ const affiliates = ref<Affiliate[]>([
   },
 ]);
 
+// Initialize data on component mount
+onMounted(async () => {
+  await fetchAffiliates();
+});
+
+// Fetch affiliates from API (currently using mock data)
+const fetchAffiliates = async () => {
+  isLoading.value = true;
+  try {
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // In a real implementation, you would fetch from API here
+    // const response = await affiliateService.getAffiliates(currentPage.value, pageSize.value);
+    // affiliates.value = response.affiliates;
+    // stats.value = response.stats;
+
+    // For now, using mock data (no changes needed)
+  } catch (error) {
+    console.error("Error fetching affiliates:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 // Utility functions
 const getAffiliateStatusVariant = (status: Affiliate["status"]) => {
   switch (status) {
@@ -697,10 +712,8 @@ const createAffiliate = async () => {
     phone: newAffiliate.value.phone,
     joinDate: new Date(),
     status: "pending",
-    commissionRate:
-      newAffiliate.value.commissionRate || 10,
-    commissionType:
-      newAffiliate.value.commissionType || "percentage",
+    commissionRate: newAffiliate.value.commissionRate || 10,
+    commissionType: newAffiliate.value.commissionType || "percentage",
     totalReferrals: 0,
     totalCommissionsEarned: 0,
     unpaidCommissions: 0,
@@ -731,11 +744,11 @@ const goToSettings = () => {
 
 // DataTable event handlers
 const handlePageChange = (page: number) => {
-  console.log("Page changed to:", page);
+  fetchAffiliates();
 };
 
 const handlePageSizeChange = (pageSize: number) => {
-  console.log("Page size changed to:", pageSize);
+  fetchAffiliates();
 };
 
 const handleSort = (
@@ -743,9 +756,13 @@ const handleSort = (
   direction: "asc" | "desc" | null
 ) => {
   console.log("Sort changed:", { column, direction });
+  // Implement sorting logic if needed
+  fetchAffiliates();
 };
 
 const handleFilters = (filters: Record<string, string>) => {
   console.log("Filters changed:", filters);
+  // Implement filtering logic if needed
+  fetchAffiliates();
 };
 </script>
