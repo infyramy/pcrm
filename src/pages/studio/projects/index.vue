@@ -19,26 +19,34 @@
           Manage active photography projects converted from client inquiries
         </p>
       </div>
-      <Button @click="createNewProject" class="flex items-center gap-2">
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
-        Create New Project
-      </Button>
+      <div class="flex items-center gap-3">
+        <!-- View toggle using Tabs component -->
+        <Tabs v-model="viewMode" class="">
+          <TabsList class="grid w-full grid-cols-2">
+            <TabsTrigger value="table">
+              <div class="flex items-center">
+                <LayoutGridIcon class="w-4 h-4 mr-1" />
+                Table
+              </div>
+            </TabsTrigger>
+            <TabsTrigger value="card" class="flex items-center">
+              <div class="flex items-center">
+                <LayoutList class="w-4 h-4 mr-1" />
+                Cards
+              </div>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Button @click="createNewProject" class="flex items-center gap-2">
+          <PlusIcon class="w-4 h-4" />
+          Create New Project
+        </Button>
+      </div>
     </div>
 
     <!-- DataTable Implementation -->
     <DataTable
+      v-if="viewMode === 'table'"
       :data="projects"
       :columns="tableColumns"
       :show-numbering="true"
@@ -88,15 +96,15 @@
       <!-- Custom template for tags column -->
       <template #cell-tags="{ item }">
         <div class="flex flex-wrap gap-1">
-          <Badge 
-            v-for="tag in (item.internalTags || []).slice(0, 2)" 
-            :key="tag.id" 
+          <Badge
+            v-for="tag in (item.internalTags || []).slice(0, 2)"
+            :key="tag.id"
             variant="secondary"
             class="text-xs"
           >
             {{ tag.name }}
           </Badge>
-          <Badge 
+          <Badge
             v-if="(item.internalTags || []).length > 2"
             variant="outline"
             class="text-xs"
@@ -109,12 +117,18 @@
       <!-- Custom template for shooters column -->
       <template #cell-shooters="{ item }">
         <div class="text-sm">
-          <div v-if="(item.assignedShooters || []).length === 0" class="text-gray-400">
+          <div
+            v-if="(item.assignedShooters || []).length === 0"
+            class="text-gray-400"
+          >
             Not assigned
           </div>
           <div v-else>
             {{ (item.assignedShooters || [])[0]?.name }}
-            <span v-if="(item.assignedShooters || []).length > 1" class="text-gray-500">
+            <span
+              v-if="(item.assignedShooters || []).length > 1"
+              class="text-gray-500"
+            >
               +{{ (item.assignedShooters || []).length - 1 }} more
             </span>
           </div>
@@ -134,74 +148,20 @@
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button variant="ghost" size="sm" class="h-8 w-8 p-0">
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zM12 13a1 1 0 110-2 1 1 0 010 2zM12 20a1 1 0 110-2 1 1 0 010 2z"
-                  />
-                </svg>
+                <MoreVerticalIcon class="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem @click="openProject(item.id)">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+                <EyeIcon class="w-4 h-4 mr-2" />
                 View Project Details
               </DropdownMenuItem>
               <DropdownMenuItem @click="editProject(item.id)">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
+                <PencilIcon class="w-4 h-4 mr-2" />
                 Edit Project
               </DropdownMenuItem>
               <DropdownMenuItem @click="viewGallery(item.id)">
-                <svg
-                  class="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
+                <ImageIcon class="w-4 h-4 mr-2" />
                 Photo Gallery
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -212,29 +172,200 @@
       <!-- Custom empty state -->
       <template #empty-state>
         <div class="text-center py-8">
-          <svg
-            class="w-12 h-12 mx-auto text-gray-400 mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-            />
-          </svg>
+          <FolderIcon class="w-12 h-12 mx-auto text-gray-400 mb-4" />
           <h3 class="text-lg font-medium text-gray-900 mb-2">
             No projects yet
           </h3>
           <p class="text-gray-500 mb-4">
-            Projects will appear here when you convert client inquiries from your forms
+            Projects will appear here when you convert client inquiries from
+            your forms
           </p>
           <Button @click="viewForms">Browse Forms & Inquiries</Button>
         </div>
       </template>
     </DataTable>
+
+    <!-- Card View Implementation -->
+    <div v-else-if="viewMode === 'card'" class="space-y-6">
+      <!-- Loading state -->
+      <div v-if="isLoading" class="grid place-items-center py-12">
+        <div class="flex flex-col items-center">
+          <svg
+            class="animate-spin h-8 w-8 text-primary mb-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <p class="text-gray-600">Loading projects...</p>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div v-else-if="projects.length === 0" class="text-center py-8">
+        <FolderIcon class="w-12 h-12 mx-auto text-gray-400 mb-4" />
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No projects yet</h3>
+        <p class="text-gray-500 mb-4">
+          Projects will appear here when you convert client inquiries from your
+          forms
+        </p>
+        <Button @click="viewForms">Browse Forms & Inquiries</Button>
+      </div>
+
+      <!-- Card grid -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <Card
+          v-for="project in projects"
+          :key="project.id"
+          class="border hover:shadow-sm transition-all duration-200"
+        >
+          <CardContent class="p-5">
+            <!-- Header with project name and status -->
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h3 class="text-lg font-medium text-foreground line-clamp-1">
+                  {{ project.name }}
+                </h3>
+                <p class="text-sm text-gray-500">{{ project.client.name }}</p>
+              </div>
+              <Badge
+                :variant="getStatusVariant(project.status)"
+                class="capitalize"
+              >
+                {{ project.status }}
+              </Badge>
+            </div>
+
+            <!-- Project details -->
+            <div class="space-y-3 mb-4">
+              <div class="flex items-center text-sm text-gray-600">
+                <CalendarIcon class="w-4 h-4 mr-2 text-gray-500" />
+                <span v-if="project.eventDate">{{
+                  formatDate(project.eventDate)
+                }}</span>
+                <span v-else class="text-gray-400">Not scheduled</span>
+              </div>
+
+              <div class="flex items-center text-sm text-gray-600">
+                <MapPinIcon class="w-4 h-4 mr-2 text-gray-500" />
+                <span v-if="project.location" class="line-clamp-1">{{
+                  project.location
+                }}</span>
+                <span v-else class="text-gray-400">No location set</span>
+              </div>
+
+              <div class="flex items-center text-sm text-gray-600">
+                <DollarSignIcon class="w-4 h-4 mr-2 text-gray-500" />
+                <span v-if="project.budget"
+                  >MYR {{ project.budget.toLocaleString() }}</span
+                >
+                <span v-else class="text-gray-400">TBD</span>
+              </div>
+
+              <div class="flex items-center text-sm text-gray-600">
+                <UsersIcon class="w-4 h-4 mr-2 text-gray-500" />
+                <span v-if="(project.assignedShooters || []).length > 0">
+                  {{ (project.assignedShooters || [])[0]?.name }}
+                  <span
+                    v-if="(project.assignedShooters || []).length > 1"
+                    class="text-gray-500"
+                  >
+                    +{{ (project.assignedShooters || []).length - 1 }} more
+                  </span>
+                </span>
+                <span v-else class="text-gray-400">Not assigned</span>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div
+              v-if="(project.internalTags || []).length > 0"
+              class="flex flex-wrap gap-1 mb-4"
+            >
+              <Badge
+                v-for="tag in project.internalTags || []"
+                :key="tag.id"
+                variant="secondary"
+                class="text-xs"
+              >
+                {{ tag.name }}
+              </Badge>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex justify-between items-center pt-3 border-t">
+              <div class="text-xs text-gray-500">
+                <span class="capitalize">{{ project.type }}</span> project
+              </div>
+
+              <div class="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  @click="openProject(project.id)"
+                >
+                  <EyeIcon class="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  @click="editProject(project.id)"
+                >
+                  <PencilIcon class="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  @click="viewGallery(project.id)"
+                >
+                  <ImageIcon class="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <!-- Pagination -->
+      <div v-if="projects.length > 0" class="flex justify-center mt-6">
+        <div class="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="currentPage <= 1"
+            @click="handlePageChange(currentPage - 1)"
+          >
+            <ChevronLeftIcon class="h-4 w-4" />
+          </Button>
+
+          <span class="text-sm">
+            Page {{ currentPage }} of {{ Math.ceil(totalProjects / pageSize) }}
+          </span>
+
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="currentPage >= Math.ceil(totalProjects / pageSize)"
+            @click="handlePageChange(currentPage + 1)"
+          >
+            <ChevronRightIcon class="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -253,12 +384,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LoadingPage } from "@/components/ui/loading";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  PlusIcon,
+  PencilIcon,
+  EyeIcon,
+  ImageIcon,
+  MoreVerticalIcon,
+  FolderIcon,
+  LayoutGridIcon,
+  LayoutList,
+  CalendarIcon,
+  MapPinIcon,
+  DollarSignIcon,
+  UsersIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "lucide-vue-next";
 import type { Project } from "@/types/project";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const router = useRouter();
 
 // Loading state for workspace setup
 const isLoadingWorkspace = ref(false);
+const isLoading = ref(false);
+const viewMode = ref<"table" | "card">("table");
+const currentPage = ref(1);
+const pageSize = ref(10);
+const totalProjects = ref(0);
 
 const breadcrumbs = [
   {
@@ -352,17 +506,17 @@ const projects = ref<Project[]>([
         venue: "Garden Pavilion, KL Garden Resort",
         notes: "Outdoor ceremony, backup indoor location available",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       {
-        id: "s2", 
+        id: "s2",
         title: "Reception",
         time: "2024-03-15T18:00",
         venue: "Grand Ballroom, KL Garden Resort",
         notes: "Evening reception with 200 guests",
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     ],
     assignedShooters: [
       {
@@ -372,15 +526,15 @@ const projects = ref<Project[]>([
         role: "main",
         specialties: ["Wedding", "Portrait"],
         dailyRate: 800,
-        isActive: true
-      }
+        isActive: true,
+      },
     ],
     internalTags: [
       { id: "vip", name: "VIP", color: "purple", priority: "high" },
-      { id: "premium", name: "Premium", color: "yellow", priority: "medium" }
+      { id: "premium", name: "Premium", color: "yellow", priority: "medium" },
     ],
     transportCost: 150,
-    internalNotes: "High-profile client, ensure extra attention to detail"
+    internalNotes: "High-profile client, ensure extra attention to detail",
   },
   {
     id: "2",
@@ -468,6 +622,9 @@ const projects = ref<Project[]>([
   },
 ]);
 
+// For pagination in card view
+totalProjects.value = projects.value.length;
+
 // Utility functions
 const getStatusVariant = (status: Project["status"]) => {
   switch (status) {
@@ -517,11 +674,14 @@ const viewForms = () => {
 
 // DataTable event handlers
 const handlePageChange = (page: number) => {
+  currentPage.value = page;
   console.log("Page changed to:", page);
 };
 
-const handlePageSizeChange = (pageSize: number) => {
-  console.log("Page size changed to:", pageSize);
+const handlePageSizeChange = (size: number) => {
+  pageSize.value = size;
+  currentPage.value = 1;
+  console.log("Page size changed to:", size);
 };
 
 const handleSort = (

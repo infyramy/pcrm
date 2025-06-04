@@ -20,18 +20,34 @@
           />
         </div>
         
-        <div>
-          <Label for="sessionPrice">Price (MYR) *</Label>
-          <Input
-            id="sessionPrice"
-            v-model="formData.price"
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="0.00"
-            class="mt-1"
-            required
-          />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label for="sessionPrice">Client Price (MYR) *</Label>
+            <Input
+              id="sessionPrice"
+              v-model="formData.price"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+              class="mt-1"
+              required
+            />
+          </div>
+          
+          <div>
+            <Label for="shooterPrice">Shooter Price (MYR) *</Label>
+            <Input
+              id="shooterPrice"
+              v-model="formData.shooterPrice"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+              class="mt-1"
+              required
+            />
+          </div>
         </div>
         
         <div>
@@ -104,17 +120,21 @@ const isSubmitting = ref(false)
 const formData = ref<CreateSessionTypeRequest>({
   name: '',
   price: 0,
+  shooterPrice: 0,
   description: ''
 })
 
 const isFormValid = computed(() => {
-  return formData.value.name.trim() !== '' && formData.value.price > 0
+  return formData.value.name.trim() !== '' && 
+         formData.value.price > 0 &&
+         formData.value.shooterPrice > 0
 })
 
 const resetForm = () => {
   formData.value = {
     name: '',
     price: 0,
+    shooterPrice: 0,
     description: ''
   }
 }
@@ -125,6 +145,7 @@ watch(() => props.editingSession, (newSession) => {
     formData.value = {
       name: newSession.name,
       price: newSession.price,
+      shooterPrice: newSession.shooterPrice,
       description: newSession.description || ''
     }
   } else {
@@ -144,6 +165,7 @@ const handleSubmit = async () => {
         ...props.editingSession,
         name: formData.value.name,
         price: formData.value.price,
+        shooterPrice: formData.value.shooterPrice,
         description: formData.value.description,
       }
       
@@ -158,6 +180,7 @@ const handleSubmit = async () => {
         id: Date.now().toString(),
         name: formData.value.name,
         price: formData.value.price,
+        shooterPrice: formData.value.shooterPrice,
         description: formData.value.description,
         isActive: true,
         createdAt: new Date()

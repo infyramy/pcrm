@@ -331,11 +331,15 @@
               v-for="item in createItems"
               :key="item.type"
               class="group relative overflow-hidden border-2 border-border/50 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 cursor-pointer focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/30 hover:-translate-y-1"
-              :class="{'opacity-70 hover:opacity-80': item.comingSoon}"
+              :class="{ 'opacity-70 hover:opacity-80': item.comingSoon }"
               tabindex="0"
               @click="item.comingSoon ? null : handleCreateAction(item.type)"
-              @keydown.enter="item.comingSoon ? null : handleCreateAction(item.type)"
-              @keydown.space.prevent="item.comingSoon ? null : handleCreateAction(item.type)"
+              @keydown.enter="
+                item.comingSoon ? null : handleCreateAction(item.type)
+              "
+              @keydown.space.prevent="
+                item.comingSoon ? null : handleCreateAction(item.type)
+              "
             >
               <CardContent
                 class="p-6 flex flex-col items-center text-center space-y-4 relative"
@@ -363,7 +367,7 @@
                   <p class="text-sm text-muted-foreground leading-relaxed">
                     {{ item.description }}
                   </p>
-                  <span 
+                  <span
                     v-if="item.comingSoon"
                     class="inline-block mt-2 px-2.5 py-1 bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-medium rounded-full"
                   >
@@ -424,10 +428,6 @@ import {
   CheckCircle,
   User,
   CreditCard,
-  XCircle,
-  Search,
-  Grid,
-  CheckSquare,
 } from "lucide-vue-next";
 import { LineChart } from "@/components/ui/chart-line";
 import { ref, computed, watch } from "vue";
@@ -709,7 +709,7 @@ watch(selectedPeriod, (newPeriod) => {
 const handleCreateAction = (actionType: string) => {
   console.log(`Creating new ${actionType}`);
   isDialogOpen.value = false;
-  
+
   // For now, we only navigate to form creation
   router.push("/studio/forms/create");
 };

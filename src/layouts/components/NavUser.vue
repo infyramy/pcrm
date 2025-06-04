@@ -15,16 +15,50 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { ChevronsUpDown, LogOut, HelpCircle, Settings, User, CreditCard, Wallet } from "lucide-vue-next";
+import {
+  ChevronsUpDown,
+  LogOut,
+  HelpCircle,
+  Settings,
+  User,
+  CreditCard,
+  Wallet,
+} from "lucide-vue-next";
+
+import {
+  Dialog,
+  DialogTrigger,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
+import { ref } from "vue";
 
 const authStore = useAuthStore();
 const router = useRouter();
 const { isMobile } = useSidebar();
+const isLogoutDialogOpen = ref(false);
+const isDropdownOpen = ref(false);
+
+function showLogoutConfirmation() {
+  isLogoutDialogOpen.value = true;
+  // Close the dropdown when opening the dialog
+  isDropdownOpen.value = false;
+}
 
 function handleLogout() {
   authStore.logout();
+  isLogoutDialogOpen.value = false;
+}
+
+function closeLogoutDialog() {
+  isLogoutDialogOpen.value = false;
 }
 
 function navigateToSupport() {
@@ -52,13 +86,13 @@ function navigateToAccount() {
 }
 
 function navigateToBilling() {
-  router.push("/billing");
+  router.push("/billings");
 }
 </script>
 <template>
   <SidebarMenu>
     <SidebarMenuItem>
-      <DropdownMenu>
+      <DropdownMenu v-model:open="isDropdownOpen">
         <DropdownMenuTrigger as-child>
           <SidebarMenuButton
             size="lg"
@@ -124,21 +158,24 @@ function navigateToBilling() {
               <User />
               Profile
             </DropdownMenuItem>
-            <DropdownMenuItem @click="navigateToAccount">
+            <!-- <DropdownMenuItem @click="navigateToAccount">
               <Wallet />
               Account
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="navigateToBilling">
+            </DropdownMenuItem> -->
+            <DropdownMenuItem @click="navigateToBilling" v-if="authStore.user?.user_type === 'studio'">
               <CreditCard />
               Billing
             </DropdownMenuItem>
-            <DropdownMenuItem @click="navigateToSettings">
+            <!-- <DropdownMenuItem @click="navigateToSettings">
               <Settings />
               Advanced Settings
-            </DropdownMenuItem>
+            </DropdownMenuItem> -->
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem @click="handleLogout" class="text-red-500">
+          <DropdownMenuItem
+            @click="showLogoutConfirmation"
+            class="text-red-500"
+          >
             <LogOut />
             Log out
           </DropdownMenuItem>
@@ -146,4 +183,23 @@ function navigateToBilling() {
       </DropdownMenu>
     </SidebarMenuItem>
   </SidebarMenu>
+
+  <!-- Logout confirmation dialog (outside of dropdown to avoid interaction issues) -->
+  <Dialog v-model:open="isLogoutDialogOpen">
+    <DialogContent class="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Confirm Logout</DialogTitle>
+        <DialogDescription>
+          You're about to sign out of your account. Any unsaved changes may be lost. Are you sure you want to continue?
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter class="mt-6 flex justify-end gap-3">
+        <Button variant="outline" @click="closeLogoutDialog" class="px-5">Cancel</Button>
+        <Button variant="destructive" @click="handleLogout" class="px-5">
+          <LogOut class="mr-2 h-4 w-4" />
+          Sign Out
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>

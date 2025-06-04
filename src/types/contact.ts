@@ -4,7 +4,7 @@ export interface Contact {
   email: string
   phone?: string
   company?: string | null
-  status: 'client' | 'prospect' | 'active' | 'inactive'
+  status: 'lead' | 'client'
   source?: 'website' | 'referral' | 'social_media' | 'google_ads' | 'direct' | 'other'
   createdAt: Date
   updatedAt?: Date
