@@ -50,10 +50,10 @@
       :data="forms"
       :columns="tableColumns"
       :show-numbering="true"
-      :show-filters="true"
       :page-size="10"
       :page-size-options="[5, 10, 25, 50]"
       row-key="id"
+      :loading="isLoading"
       @update:page="handlePageChange"
       @update:page-size="handlePageSizeChange"
       @update:sort="handleSort"
@@ -279,7 +279,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Breadcrumb from "@/layouts/components/PageHeader.vue";
 import { Button } from "@/components/ui/button";
@@ -370,6 +370,32 @@ const forms = ref<Form[]>([
   },
 ]);
 const totalForms = ref(forms.value.length);
+
+// Initialize data on component mount
+onMounted(async () => {
+  await fetchForms();
+});
+
+// Fetch forms from API (currently using mock data)
+const fetchForms = async () => {
+  isLoading.value = true;
+  try {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // In a real implementation, you would fetch from API here
+    // const response = await formService.getForms(currentPage.value, pageSize.value);
+    // forms.value = response.forms;
+    // totalForms.value = response.total;
+    
+    // For now, using mock data
+    totalForms.value = forms.value.length;
+  } catch (error) {
+    console.error("Error fetching forms:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const breadcrumbs = [
   {
@@ -498,13 +524,13 @@ const deleteForm = (formId: string) => {
 // DataTable event handlers
 const handlePageChange = (page: number) => {
   currentPage.value = page;
-  console.log("Page changed to:", page);
+  fetchForms();
 };
 
 const handlePageSizeChange = (size: number) => {
   pageSize.value = size;
   currentPage.value = 1;
-  console.log("Page size changed to:", size);
+  fetchForms();
 };
 
 const handleSort = (
@@ -512,10 +538,14 @@ const handleSort = (
   direction: "asc" | "desc" | null
 ) => {
   console.log("Sort changed:", { column, direction });
+  // Implement sorting logic if needed
+  fetchForms();
 };
 
 const handleFilters = (filters: Record<string, string>) => {
   console.log("Filters changed:", filters);
+  // Implement filtering logic if needed
+  fetchForms();
 };
 </script>
 

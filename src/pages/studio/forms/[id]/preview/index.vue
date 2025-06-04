@@ -595,6 +595,7 @@
                 <div
                   :class="viewMode === 'desktop' ? 'space-y-7' : 'space-y-5'"
                 >
+                  <!-- Fixed Customer Fields -->
                   <!-- Name Field -->
                   <div class="space-y-2">
                     <Label
@@ -666,6 +667,287 @@
                       class="text-sm text-red-500 mt-1"
                     >
                       {{ errors["customer_phone"] }}
+                    </p>
+                  </div>
+
+                  <!-- Dynamic Form Fields from Form Builder -->
+                  <div
+                    v-for="field in visibleFields"
+                    :key="field.id"
+                    class="space-y-2"
+                    :class="getWidthClass(field.width)"
+                  >
+                    <!-- Field Label -->
+                    <Label
+                      :for="field.id"
+                      :class="[
+                        'flex items-center gap-1 mb-1.5',
+                        viewMode === 'desktop' ? 'text-base' : 'text-sm',
+                      ]"
+                    >
+                      {{ field.label }}
+                      <span v-if="field.validation?.required" class="text-red-500">*</span>
+                    </Label>
+
+                    <!-- Field Description -->
+                    <p 
+                      v-if="field.description" 
+                      :class="[
+                        'text-muted-foreground mb-2',
+                        viewMode === 'desktop' ? 'text-sm' : 'text-xs'
+                      ]"
+                    >
+                      {{ field.description }}
+                    </p>
+
+                    <!-- Field Input Based on Type -->
+                    <div>
+                      <!-- Text Input -->
+                      <Input
+                        v-if="field.type === 'text'"
+                        :id="field.id"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value) => updateFieldValue(field.id, value, 'text')"
+                        :placeholder="field.placeholder"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- Email Input -->
+                      <Input
+                        v-else-if="field.type === 'email'"
+                        :id="field.id"
+                        type="email"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value) => updateFieldValue(field.id, value, 'text')"
+                        :placeholder="field.placeholder"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- Number Input -->
+                      <Input
+                        v-else-if="field.type === 'number'"
+                        :id="field.id"
+                        type="number"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value: string | number) => updateFieldValue(field.id, Number(value), 'number')"
+                        :placeholder="field.placeholder"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- Date Input -->
+                      <Input
+                        v-else-if="field.type === 'date'"
+                        :id="field.id"
+                        type="date"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value) => updateFieldValue(field.id, value, 'text')"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- Time Input -->
+                      <Input
+                        v-else-if="field.type === 'time'"
+                        :id="field.id"
+                        type="time"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value) => updateFieldValue(field.id, value, 'text')"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- DateTime Input -->
+                      <Input
+                        v-else-if="field.type === 'datetime'"
+                        :id="field.id"
+                        type="datetime-local"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value) => updateFieldValue(field.id, value, 'text')"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- Phone Input -->
+                      <Input
+                        v-else-if="field.type === 'phone'"
+                        :id="field.id"
+                        type="tel"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value) => updateFieldValue(field.id, value, 'text')"
+                        :placeholder="field.placeholder"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- URL Input -->
+                      <Input
+                        v-else-if="field.type === 'url'"
+                        :id="field.id"
+                        type="url"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value) => updateFieldValue(field.id, value, 'text')"
+                        :placeholder="field.placeholder"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- Password Input -->
+                      <Input
+                        v-else-if="field.type === 'password'"
+                        :id="field.id"
+                        type="password"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value) => updateFieldValue(field.id, value, 'text')"
+                        :placeholder="field.placeholder"
+                        :class="[
+                          {
+                            'border-red-500 focus:ring-red-500': errors[field.id],
+                          },
+                          viewMode === 'desktop' ? 'py-2.5' : 'py-2 text-sm',
+                        ]"
+                      />
+
+                      <!-- Textarea -->
+                      <Textarea
+                        v-else-if="field.type === 'textarea'"
+                        :id="field.id"
+                        :modelValue="getFieldValue(field.id)"
+                        @update:modelValue="(value: any) => updateFieldValue(field.id, value, 'text')"
+                        :placeholder="field.placeholder"
+                        rows="4"
+                        class="resize-none"
+                        :class="{
+                          'border-red-500 focus:ring-red-500': errors[field.id],
+                        }"
+                      />
+
+                      <!-- Select Dropdown -->
+                      <Select
+                        v-else-if="field.type === 'select'"
+                        :model-value="getFieldValue(field.id)"
+                        @update:model-value="(value: any) => updateFieldValue(field.id, value, 'text')"
+                      >
+                        <SelectTrigger 
+                          :id="field.id" 
+                          :class="[
+                            {
+                              'border-red-500 focus:ring-red-500': errors[field.id],
+                            },
+                            viewMode === 'desktop' ? 'h-11' : 'h-10 text-sm',
+                          ]"
+                        >
+                          <SelectValue
+                            :placeholder="field.placeholder || 'Choose an option...'"
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem
+                            v-for="option in field.options"
+                            :key="option.id"
+                            :value="option.value"
+                          >
+                            {{ option.label }}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <!-- Radio Buttons -->
+                      <RadioGroup
+                        v-else-if="field.type === 'radio'"
+                        :model-value="getFieldValue(field.id)"
+                        @update:model-value="(value: string) => updateFieldValue(field.id, value, 'text')"
+                      >
+                        <div class="space-y-3">
+                          <div
+                            v-for="option in field.options"
+                            :key="option.id"
+                            class="flex items-center space-x-3"
+                          >
+                            <RadioGroupItem :value="option.value" :id="option.id" />
+                            <Label 
+                              :for="option.id" 
+                              :class="[
+                                'cursor-pointer',
+                                viewMode === 'desktop' ? 'text-sm' : 'text-xs'
+                              ]"
+                            >
+                              {{ option.label }}
+                            </Label>
+                          </div>
+                        </div>
+                      </RadioGroup>
+
+                      <!-- Checkboxes -->
+                      <div v-else-if="field.type === 'checkbox'">
+                        <div class="space-y-3">
+                          <div
+                            v-for="option in field.options"
+                            :key="option.id"
+                            class="flex items-center space-x-3"
+                          >
+                            <Checkbox
+                              :id="option.id"
+                              :checked="isOptionSelected(field.id, option.value)"
+                              @update:checked="(checked: boolean) => toggleCheckboxOption(field.id, option.value, checked)"
+                            />
+                            <Label 
+                              :for="option.id" 
+                              :class="[
+                                'cursor-pointer',
+                                viewMode === 'desktop' ? 'text-sm' : 'text-xs'
+                              ]"
+                            >
+                              {{ option.label }}
+                            </Label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Field Validation Error -->
+                    <p 
+                      v-if="errors[field.id]" 
+                      :class="[
+                        'text-red-500 mt-1',
+                        viewMode === 'desktop' ? 'text-sm' : 'text-xs'
+                      ]"
+                    >
+                      {{ errors[field.id] }}
                     </p>
                   </div>
                 </div>
@@ -1099,7 +1381,14 @@ import { useRoute } from "vue-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -1110,6 +1399,7 @@ import {
   SmartphoneIcon,
 } from "lucide-vue-next";
 import type { FormBuilder, FormField } from "@/types/form";
+import { useFormBuilderStore } from "@/stores/formBuilder";
 
 interface FormDataValue {
   type: "text" | "number" | "boolean" | "array" | "file";
@@ -1141,7 +1431,9 @@ interface FormConfiguration {
   settings: {
     submitButtonText: string;
     successMessage: string;
+    redirectUrl?: string;
     allowMultipleSubmissions: boolean;
+    autoHideSuccess?: boolean;
     requireAuthentication: boolean;
   };
   terms: FormTerms;
@@ -1164,6 +1456,7 @@ interface FormConfiguration {
 
 const route = useRoute();
 const formId = route.params.id as string;
+const formBuilderStore = useFormBuilderStore();
 
 // State
 const formData = reactive<FormDataRecord>({});
@@ -1196,10 +1489,10 @@ const availableAddons = ref<
   }>
 >([]);
 
-// Form configuration
+// Form configuration - Initialize with empty config first
 const formConfig = ref<FormConfiguration>({
   title: "Form Preview",
-  description: "This is a preview of your configured form.",
+  description: "Loading form configuration...",
   fields: [],
   settings: {
     submitButtonText: "Submit",
@@ -1210,8 +1503,8 @@ const formConfig = ref<FormConfiguration>({
   terms: {
     termsAndConditions: "",
     termsCheckboxText: "I agree to the terms and conditions",
-    requireTermsAcceptance: true,
-    showPriceBreakdown: true,
+    requireTermsAcceptance: false,
+    showPriceBreakdown: false,
   },
   whatsapp: {
     whatsappNumber: "",
@@ -1286,6 +1579,36 @@ const initializeFormData = () => {
   formData["customer_name"] = { type: "text", value: "" };
   formData["customer_phone"] = { type: "text", value: "" };
 
+  // Initialize form fields from the form configuration
+  visibleFields.value.forEach((field) => {
+    if (!formData[field.id]) {
+      const type: FormDataValue["type"] =
+        field.type === "number"
+          ? "number"
+          : field.type === "checkbox"
+          ? "array"
+          : field.type === "file"
+          ? "file"
+          : "text";
+
+      const value =
+        field.defaultValue !== undefined
+          ? field.defaultValue
+          : field.type === "checkbox"
+          ? []
+          : field.type === "file"
+          ? null
+          : field.type === "number"
+          ? 0
+          : "";
+
+      formData[field.id] = {
+        type,
+        value: value as string | number | boolean | string[] | File | null,
+      };
+    }
+  });
+
   // Reset terms acceptance
   termsAccepted.value = false;
   formSubmitted.value = false;
@@ -1307,7 +1630,9 @@ watch(
             : "text";
 
         const value =
-          field.type === "checkbox"
+          field.defaultValue !== undefined
+            ? field.defaultValue
+            : field.type === "checkbox"
             ? []
             : field.type === "file"
             ? null
@@ -1340,7 +1665,87 @@ const getWidthClass = (width?: string) => {
   }
 };
 
-// Modify validation to handle customer fields
+// Validate field based on its validation rules
+const validateField = (field: FormField): string | null => {
+  const formValue = formData[field.id];
+  const value = formValue?.value;
+  const validation = field.validation;
+
+  if (!validation) return null;
+
+  // Required validation
+  if (validation.required) {
+    let isEmpty = false;
+    
+    if (value === undefined || value === null) {
+      isEmpty = true;
+    } else if (typeof value === "string" && value.trim() === "") {
+      isEmpty = true;
+    } else if (Array.isArray(value) && value.length === 0) {
+      isEmpty = true;
+    } else if (field.type === "select" && value === "") {
+      isEmpty = true;
+    } else if (field.type === "radio" && value === "") {
+      isEmpty = true;
+    }
+
+    if (isEmpty) {
+      return validation.customMessage || `${field.label} is required`;
+    }
+  }
+
+  // Type-specific validation
+  if (value !== null && value !== undefined && value !== "") {
+    // Email validation
+    if (field.type === "email" && typeof value === "string") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        return "Please enter a valid email address";
+      }
+    }
+
+    // Phone validation
+    if (field.type === "phone" && typeof value === "string") {
+      const phoneRegex = /^\+?[\d\s-()]{8,}$/;
+      if (!phoneRegex.test(value)) {
+        return "Please enter a valid phone number";
+      }
+    }
+
+    // URL validation
+    if (field.type === "url" && typeof value === "string") {
+      try {
+        new URL(value);
+      } catch {
+        return "Please enter a valid URL";
+      }
+    }
+
+    // Number validation
+    if (field.type === "number" && typeof value === "number") {
+      if (validation.min !== undefined && value < validation.min) {
+        return `Value must be at least ${validation.min}`;
+      }
+      if (validation.max !== undefined && value > validation.max) {
+        return `Value must be at most ${validation.max}`;
+      }
+    }
+
+    // Text length validation
+    if (["text", "textarea"].includes(field.type) && typeof value === "string") {
+      if (validation.minLength && value.length < validation.minLength) {
+        return `Must be at least ${validation.minLength} characters`;
+      }
+      if (validation.maxLength && value.length > validation.maxLength) {
+        return `Must be at most ${validation.maxLength} characters`;
+      }
+    }
+  }
+
+  return null;
+};
+
+// Modify validation to handle customer fields and form fields
 const validateForm = () => {
   // Clear any existing errors
   Object.keys(errors).forEach((key) => delete errors[key]);
@@ -1358,6 +1763,14 @@ const validateForm = () => {
     const phoneRegex = /^\+?[\d\s-()]{8,}$/;
     if (!phoneRegex.test(phoneValue)) {
       errors["customer_phone"] = "Please enter a valid phone number";
+    }
+  }
+
+  // Validate form fields
+  for (const field of visibleFields.value) {
+    const error = validateField(field);
+    if (error) {
+      errors[field.id] = error;
     }
   }
 
@@ -1411,17 +1824,26 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
 
   try {
-    // TODO: Implement actual form submission
+    // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Move to success step instead of showing success message
+    // Move to success step
     currentStep.value = 5;
 
-    // Reset form if multiple submissions are allowed
-    if (formConfig.value.settings.allowMultipleSubmissions) {
+    // Handle auto-hide success message if configured
+    if (formConfig.value.settings.autoHideSuccess) {
       setTimeout(() => {
-        resetForm();
+        if (formConfig.value.settings.allowMultipleSubmissions) {
+          resetForm();
+        }
       }, 5000);
+    }
+
+    // Handle redirect if configured
+    if (formConfig.value.settings.redirectUrl) {
+      setTimeout(() => {
+        window.location.href = formConfig.value.settings.redirectUrl!;
+      }, 3000); // Give user time to see success message
     }
   } catch (error) {
     console.error("Error submitting form:", error);
@@ -1511,220 +1933,116 @@ const hasSessionsOrAddons = computed(() => {
   );
 });
 
-// TODO: Fetch actual form configuration
+// Load form configuration from the form builder store
 const fetchFormConfig = async () => {
   try {
-    // TODO: Replace with actual API call
-    const response = await fetch(`/api/forms/${formId}`);
-    const data = await response.json();
-    formConfig.value = {
-      ...data,
-      terms: data.terms || formConfig.value.terms,
-      whatsapp: data.whatsapp || formConfig.value.whatsapp,
-      sessions: data.sessions || formConfig.value.sessions,
-      addons: data.addons || formConfig.value.addons,
-    };
+    // Get form from form builder store
+    const savedForm = formBuilderStore.getFormById(formId);
+    
+    if (savedForm) {
+      // Map the FormBuilder structure to FormConfiguration
+      formConfig.value = {
+        title: savedForm.title || "Form Preview",
+        description: savedForm.description || "",
+        studioName: "Your Studio", // You might want to get this from user settings
+        bannerImage: undefined, // You might want to add this to FormBuilder settings
+        fields: savedForm.fields || [],
+        settings: {
+          submitButtonText: savedForm.settings?.submitButtonText || "Submit",
+          successMessage: savedForm.settings?.successMessage || "Thank you for your submission!",
+          redirectUrl: savedForm.settings?.redirectUrl || "",
+          allowMultipleSubmissions: savedForm.settings?.allowMultipleSubmissions ?? true,
+          autoHideSuccess: savedForm.settings?.autoHideSuccess ?? true,
+          requireAuthentication: savedForm.settings?.requireAuthentication ?? false,
+        },
+        terms: {
+          termsAndConditions: "",
+          termsCheckboxText: "I agree to the terms and conditions",
+          requireTermsAcceptance: false,
+          showPriceBreakdown: false,
+        },
+        whatsapp: {
+          whatsappNumber: "",
+          whatsappMessage: "",
+          enableEmailBackup: false,
+          backupEmail: "",
+        },
+        sessions: {
+          selectedSessionTypes: [],
+        },
+        addons: {
+          selectedAddons: [],
+        },
+      };
 
-    // Initialize selected session if there are session types
-    if (formConfig.value.sessions.selectedSessionTypes.length > 0) {
-      selectedSession.value =
-        formConfig.value.sessions.selectedSessionTypes[0].id;
+      console.log("Loaded form configuration from store:", formConfig.value);
+    } else {
+      console.warn("No form found in store, using default configuration");
+      // Keep the default configuration with a note that form wasn't found
+      formConfig.value.title = "Form Not Found";
+      formConfig.value.description = "The requested form could not be found. Please check the form ID and try again.";
     }
 
-    // Initialize available session types and addons
-    // In a real app, these would be fetched from an API
+    // Initialize available session types and addons with mock data for now
+    // In a real application, these would be fetched from your backend
     fetchAvailableSessionsAndAddons();
   } catch (error) {
-    console.error("Error fetching form configuration:", error);
-
-    // Simulate some data for the preview
-    formConfig.value = {
-      title: "Wedding Photography Booking Form",
-      description:
-        "Book your wedding photography session with us. Fill out the form below to get started.",
-      fields: [
-        {
-          id: "name",
-          type: "text",
-          label: "Full Name",
-          placeholder: "Enter your full name",
-          description: "Please provide your full legal name",
-          validation: { required: true },
-          order: 1,
-          width: "full",
-        },
-        {
-          id: "email",
-          type: "email",
-          label: "Email Address",
-          placeholder: "your.email@example.com",
-          validation: { required: true },
-          order: 2,
-          width: "full",
-        },
-        {
-          id: "phone",
-          type: "phone",
-          label: "Phone Number",
-          placeholder: "+1 (123) 456-7890",
-          validation: { required: true },
-          order: 3,
-          width: "full",
-        },
-        {
-          id: "event_date",
-          type: "date",
-          label: "Wedding Date",
-          validation: { required: true },
-          order: 4,
-          width: "full",
-        },
-        {
-          id: "session_type",
-          type: "select",
-          label: "Session Type",
-          placeholder: "Select a package",
-          options: [
-            { id: "1", label: "Basic (4 hours)", value: "basic" },
-            { id: "2", label: "Standard (6 hours)", value: "standard" },
-            { id: "3", label: "Premium (8 hours)", value: "premium" },
-            { id: "4", label: "Ultimate (Full day)", value: "ultimate" },
-          ],
-          validation: { required: true },
-          order: 5,
-          width: "full",
-        },
-        {
-          id: "location",
-          type: "text",
-          label: "Venue Location",
-          placeholder: "Enter the venue address",
-          order: 6,
-          width: "full",
-        },
-        {
-          id: "message",
-          type: "textarea",
-          label: "Additional Information",
-          placeholder:
-            "Let us know any special requests or details about your wedding",
-          order: 7,
-          width: "full",
-        },
-      ],
-      settings: {
-        submitButtonText: "Book Now",
-        successMessage:
-          "Thank you for your booking request! We will contact you shortly to confirm the details.",
-        allowMultipleSubmissions: true,
-        requireAuthentication: false,
-      },
-      terms: {
-        termsAndConditions:
-          "By booking with us, you agree to the following terms and conditions:\n\n1. A 50% deposit is required to secure your booking date.\n2. The remaining balance is due 7 days before the event.\n3. Cancellations within 30 days of the event are non-refundable.\n4. We reserve the right to use the photos for portfolio and marketing purposes.\n5. Travel fees may apply for venues outside our service area.\n\nPlease contact us if you have any questions about these terms.",
-        termsCheckboxText: "I agree to the terms and conditions of booking",
-        requireTermsAcceptance: true,
-        showPriceBreakdown: true,
-      },
-      whatsapp: {
-        whatsappNumber: "+60123456789",
-        whatsappMessage:
-          "Hi! I would like to book a wedding photography session.\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nWedding Date: {event_date}\nPackage: {session_type}\n\nPlease let me know the next steps!",
-        enableEmailBackup: true,
-        backupEmail: "bookings@photography.com",
-      },
-      sessions: {
-        selectedSessionTypes: [
-          { id: "session1", customPrice: 1200 },
-          { id: "session2", customPrice: 1800 },
-          { id: "session3", customPrice: 2500 },
-        ],
-      },
-      addons: {
-        selectedAddons: [
-          {
-            id: "addon1",
-            customPrice: 300,
-            hasSessionRestriction: true,
-            availableForSessions: ["session1", "session2"],
-          },
-          {
-            id: "addon2",
-            customPrice: 500,
-            hasSessionRestriction: false,
-            availableForSessions: [],
-          },
-          {
-            id: "addon3",
-            customPrice: 150,
-            hasSessionRestriction: true,
-            availableForSessions: ["session2", "session3"],
-          },
-        ],
-      },
-    };
-
-    // Initialize selected session if there are session types
-    if (formConfig.value.sessions.selectedSessionTypes.length > 0) {
-      selectedSession.value =
-        formConfig.value.sessions.selectedSessionTypes[0].id;
-    }
-
-    // Initialize available session types and addons with mock data
-    fetchAvailableSessionsAndAddons();
+    console.error("Error loading form configuration:", error);
+    
+    // Keep default configuration on error
+    formConfig.value.title = "Error Loading Form";
+    formConfig.value.description = "An error occurred while loading the form configuration.";
   }
 
-  // Initialize form data with the new configuration
+  // Initialize form data with the loaded configuration
   initializeFormData();
 };
 
 // Fetch available sessions and addons
 const fetchAvailableSessionsAndAddons = () => {
-  // In a real app, these would be separate API calls
-
-  // Mock session types data
+  // Mock session types data - in real app these would come from API
   availableSessionTypes.value = [
     {
       id: "session1",
-      name: "Nikah Ceremony (4 hours)",
-      description: "Coverage of the Nikah/Solemnization ceremony",
-      price: 1200,
+      name: "Basic Session (2 hours)",
+      description: "Perfect for small events or portraits",
+      price: 800,
     },
     {
       id: "session2",
-      name: "Reception (6 hours)",
-      description: "Full reception coverage with family photos",
-      price: 1800,
+      name: "Standard Session (4 hours)",
+      description: "Great for medium events and parties",
+      price: 1200,
     },
     {
       id: "session3",
-      name: "Full Day Wedding (10 hours)",
-      description: "Complete coverage from preparation to reception",
-      price: 2500,
+      name: "Premium Session (6 hours)",
+      description: "Full coverage for large events",
+      price: 1800,
     },
   ];
 
-  // Mock addons data
+  // Mock addons data - in real app these would come from API
   availableAddons.value = [
     {
       id: "addon1",
       name: "Additional Hour",
       description: "Extend your session by 1 hour",
-      price: 300,
+      price: 200,
       maxQuantity: 3,
     },
     {
       id: "addon2",
-      name: "Premium Photo Album",
-      description: "High-quality 30-page photo album",
-      price: 500,
+      name: "Photo Album",
+      description: "High-quality printed photo album",
+      price: 150,
       maxQuantity: 1,
     },
     {
       id: "addon3",
-      name: "Second Photographer",
-      description: "Additional photographer for more coverage",
-      price: 150,
+      name: "Digital Gallery",
+      description: "Online gallery for easy sharing",
+      price: 100,
       maxQuantity: 1,
     },
   ];
@@ -1843,87 +2161,10 @@ const validateStepFields = (fields: FormField[]): boolean => {
   const stepErrors = {} as Record<string, string>;
 
   for (const field of fields) {
-    const formValue = formData[field.id];
-    const value = formValue?.value;
-
-    // Required field validation
-    if (
-      field.validation?.required &&
-      (value === null || value === undefined || value === "")
-    ) {
-      stepErrors[field.id] = `${field.label} is required`;
+    const error = validateField(field);
+    if (error) {
+      stepErrors[field.id] = error;
       isValid = false;
-      continue;
-    }
-
-    if (value === null) continue;
-
-    // Email validation
-    if (field.type === "email" && isStringValue(formValue)) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formValue.value)) {
-        stepErrors[field.id] = "Please enter a valid email address";
-        isValid = false;
-      }
-    }
-
-    // Phone validation
-    if (field.type === "phone" && isStringValue(formValue)) {
-      const phoneRegex = /^\+?[\d\s-()]{8,}$/;
-      if (!phoneRegex.test(formValue.value)) {
-        stepErrors[field.id] = "Please enter a valid phone number";
-        isValid = false;
-      }
-    }
-
-    // URL validation
-    if (field.type === "url" && isStringValue(formValue)) {
-      try {
-        new URL(formValue.value);
-      } catch {
-        stepErrors[field.id] = "Please enter a valid URL";
-        isValid = false;
-      }
-    }
-
-    // Number validation
-    if (field.type === "number" && isNumberValue(formValue)) {
-      if (
-        field.validation?.min !== undefined &&
-        formValue.value < field.validation.min
-      ) {
-        stepErrors[field.id] = `Value must be at least ${field.validation.min}`;
-        isValid = false;
-      }
-      if (
-        field.validation?.max !== undefined &&
-        formValue.value > field.validation.max
-      ) {
-        stepErrors[field.id] = `Value must be at most ${field.validation.max}`;
-        isValid = false;
-      }
-    }
-
-    // Text length validation
-    if (["text", "textarea"].includes(field.type) && isStringValue(formValue)) {
-      if (
-        field.validation?.minLength &&
-        formValue.value.length < field.validation.minLength
-      ) {
-        stepErrors[
-          field.id
-        ] = `Must be at least ${field.validation.minLength} characters`;
-        isValid = false;
-      }
-      if (
-        field.validation?.maxLength &&
-        formValue.value.length > field.validation.maxLength
-      ) {
-        stepErrors[
-          field.id
-        ] = `Must be at most ${field.validation.maxLength} characters`;
-        isValid = false;
-      }
     }
   }
 
@@ -1931,22 +2172,6 @@ const validateStepFields = (fields: FormField[]): boolean => {
   Object.assign(errors, stepErrors);
   return isValid;
 };
-
-// Type guards
-const isStringValue = (
-  value: FormDataValue
-): value is { type: "text"; value: string } =>
-  value.type === "text" && typeof value.value === "string";
-
-const isNumberValue = (
-  value: FormDataValue
-): value is { type: "number"; value: number } =>
-  value.type === "number" && typeof value.value === "number";
-
-const isArrayValue = (
-  value: FormDataValue
-): value is { type: "array"; value: string[] } =>
-  value.type === "array" && Array.isArray(value.value);
 
 const handleFileUpload = (event: Event, fieldId: string) => {
   const input = event.target as HTMLInputElement;
@@ -1970,7 +2195,7 @@ const resetForm = () => {
   currentStep.value = 0;
 };
 
-// Initialize
+// Initialize - Load form configuration from store
 onMounted(() => {
   fetchFormConfig();
 });

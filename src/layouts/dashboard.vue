@@ -34,10 +34,16 @@ import {
 import { Icon } from "@iconify/vue";
 import { useColorMode } from "@vueuse/core";
 import NavUser from "@/layouts/components/NavUser.vue";
-
 import { computed } from "vue";
 import { useRouter } from "vue-router";
-import { ChevronRight } from "lucide-vue-next";
+import {
+  ChevronRight,
+  BookOpen,
+  Info,
+  Bell,
+  HelpCircle,
+  Headset,
+} from "lucide-vue-next";
 
 // Pass { disableTransition: false } to enable transitions
 const mode = useColorMode();
@@ -56,8 +62,8 @@ const navigation = computed(() => navigationStore.navigation);
 function formatTimeAgo(date: Date) {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  
-  if (diffInSeconds < 60) return 'just now';
+
+  if (diffInSeconds < 60) return "just now";
   if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
   if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
   return `${Math.floor(diffInSeconds / 86400)}d ago`;
@@ -150,21 +156,21 @@ function formatTimeAgo(date: Date) {
             <DropdownMenu>
               <DropdownMenuTrigger as-child>
                 <Button variant="secondary" class="justify-center">
-                  <Icon class="h-4 w-4" icon="radix-icons:question-mark-circled" />
+                  <HelpCircle class="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Icon class="h-4 w-4 mr-2" icon="radix-icons:envelope-closed" />
+                  <Headset class="h-4 w-4 mr-2" />
                   <span>Contact Support</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Icon class="h-4 w-4 mr-2" icon="radix-icons:book-open" />
+                  <BookOpen class="h-4 w-4 mr-2" />
                   <span>Documentation</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Icon class="h-4 w-4 mr-2" icon="radix-icons:info-circled" />
+                  <Info class="h-4 w-4 mr-2" />
                   <span>About</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -173,7 +179,7 @@ function formatTimeAgo(date: Date) {
             <DropdownMenu>
               <DropdownMenuTrigger as-child>
                 <Button variant="secondary" class="justify-center relative">
-                  <Icon class="h-4 w-4" icon="radix-icons:bell" />
+                  <Bell class="h-4 w-4" />
                   <span
                     v-if="notificationStore.unreadCount > 0"
                     class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
@@ -197,7 +203,9 @@ function formatTimeAgo(date: Date) {
                 </div>
                 <DropdownMenuSeparator />
                 <div class="max-h-96 overflow-y-auto">
-                  <template v-if="notificationStore.latestNotifications.length > 0">
+                  <template
+                    v-if="notificationStore.latestNotifications.length > 0"
+                  >
                     <DropdownMenuItem
                       v-for="notification in notificationStore.latestNotifications"
                       :key="notification.id"
@@ -210,18 +218,23 @@ function formatTimeAgo(date: Date) {
                             :class="{
                               'text-blue-500': notification.type === 'info',
                               'text-green-500': notification.type === 'success',
-                              'text-yellow-500': notification.type === 'warning',
-                              'text-red-500': notification.type === 'error'
+                              'text-yellow-500':
+                                notification.type === 'warning',
+                              'text-red-500': notification.type === 'error',
                             }"
-                            :icon="{
-                              'info': 'radix-icons:info-circled',
-                              'success': 'radix-icons:check-circled',
-                              'warning': 'radix-icons:exclamation-triangle',
-                              'error': 'radix-icons:cross-circled'
-                            }[notification.type]"
+                            :icon="
+                              {
+                                info: 'radix-icons:info-circled',
+                                success: 'radix-icons:check-circled',
+                                warning: 'radix-icons:exclamation-triangle',
+                                error: 'radix-icons:cross-circled',
+                              }[notification.type]
+                            "
                             class="h-4 w-4"
                           />
-                          <span class="font-medium">{{ notification.title }}</span>
+                          <span class="font-medium">{{
+                            notification.title
+                          }}</span>
                         </div>
                         <p class="text-xs text-muted-foreground">
                           {{ notification.message }}
@@ -232,13 +245,16 @@ function formatTimeAgo(date: Date) {
                       </div>
                     </DropdownMenuItem>
                   </template>
-                  <div v-else class="px-2 py-4 text-center text-sm text-muted-foreground">
+                  <div
+                    v-else
+                    class="px-2 py-4 text-center text-sm text-muted-foreground"
+                  >
                     No notifications
                   </div>
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem @click="router.push('/notifications')">
-                  <Icon class="h-4 w-4 mr-2" icon="radix-icons:bell" />
+                  <Bell class="h-4 w-4 mr-2" />
                   <span>View all notifications</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

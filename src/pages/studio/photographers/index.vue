@@ -47,6 +47,7 @@
       @update:page-size="handlePageSizeChange"
       @update:sort="handleSort"
       @update:filters="handleFilters"
+      :loading="isLoading"
     >
       <!-- Custom template for photo/name column -->
       <template #cell-name="{ item }">
@@ -728,6 +729,7 @@ import type { Photographer, BadgeVariant } from "@/types/photographer";
 
 // Page state
 const isLoadingWorkspace = ref(false);
+const isLoading = ref(false);
 const isDetailDialogOpen = ref(false);
 const selectedPhotographer = ref<Photographer | null>(null);
 const router = useRouter();
@@ -887,6 +889,30 @@ const photographers = ref<Photographer[]>([
   },
 ]);
 
+// Initialize data on component mount
+onMounted(async () => {
+  await fetchPhotographers();
+});
+
+// Fetch photographers from API (currently using mock data)
+const fetchPhotographers = async () => {
+  isLoading.value = true;
+  try {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // In a real implementation, you would fetch from API here
+    // const response = await photographerService.getPhotographers(currentPage.value, pageSize.value);
+    // photographers.value = response.photographers;
+    
+    // For now, using mock data (no changes needed)
+  } catch (error) {
+    console.error("Error fetching photographers:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 // Utility functions
 function getInitials(name: string): string {
   return name
@@ -931,19 +957,21 @@ function formatDate(date: Date): string {
 
 // Event handlers
 function handlePageChange(page: number) {
-  console.log("Page changed:", page);
+  fetchPhotographers();
 }
 
 function handlePageSizeChange(pageSize: number) {
-  console.log("Page size changed:", pageSize);
+  fetchPhotographers();
 }
 
 function handleSort(column: string | null, direction: "asc" | "desc" | null) {
   console.log("Sort changed:", { column, direction });
+  fetchPhotographers();
 }
 
 function handleFilters(filters: Record<string, any>) {
   console.log("Filters changed:", filters);
+  fetchPhotographers();
 }
 
 function createNewPhotographer() {
@@ -1005,8 +1033,4 @@ function downloadProfilePDF(id?: string) {
 function openImageModal(image: any) {
   console.log("Opening image modal:", image);
 }
-
-onMounted(() => {
-  // Initialize data
-});
 </script>

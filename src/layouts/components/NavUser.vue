@@ -15,20 +15,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  ChevronsUpDown,
-  LogOut,
-  HelpCircle,
-  Settings,
-  User,
-  CreditCard,
-  Wallet,
-} from "lucide-vue-next";
+import { ChevronsUpDown, LogOut, User, CreditCard } from "lucide-vue-next";
 
 import {
   Dialog,
-  DialogTrigger,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -162,7 +152,10 @@ function navigateToBilling() {
               <Wallet />
               Account
             </DropdownMenuItem> -->
-            <DropdownMenuItem @click="navigateToBilling" v-if="authStore.user?.user_type === 'studio'">
+            <DropdownMenuItem
+              @click="navigateToBilling"
+              v-if="authStore.user?.user_type === 'studio'"
+            >
               <CreditCard />
               Billing
             </DropdownMenuItem>
@@ -190,11 +183,14 @@ function navigateToBilling() {
       <DialogHeader>
         <DialogTitle>Confirm Logout</DialogTitle>
         <DialogDescription>
-          You're about to sign out of your account. Any unsaved changes may be lost. Are you sure you want to continue?
+          You're about to sign out of your account. Any unsaved changes may be
+          lost. Are you sure you want to continue?
         </DialogDescription>
       </DialogHeader>
       <DialogFooter class="mt-6 flex justify-end gap-3">
-        <Button variant="outline" @click="closeLogoutDialog" class="px-5">Cancel</Button>
+        <Button variant="outline" @click="closeLogoutDialog" class="px-5"
+          >Cancel</Button
+        >
         <Button variant="destructive" @click="handleLogout" class="px-5">
           <LogOut class="mr-2 h-4 w-4" />
           Sign Out

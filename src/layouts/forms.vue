@@ -27,12 +27,22 @@ import {
   MessageCircleIcon,
   HomeIcon,
   InboxIcon,
+  SunIcon,
+  MoonIcon,
 } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useColorMode } from "@vueuse/core";
 
 const router = useRouter();
 const route = useRoute();
+
+// Initialize color mode
+const mode = useColorMode();
+
+function toggleMode() {
+  mode.value = mode.value === "dark" ? "light" : "dark";
+}
 
 // Get form ID from route params
 const formId = computed(() => route.params.id as string);
@@ -207,6 +217,22 @@ const isActiveRoute = (url: string) => {
               <div class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
               Draft
             </span>
+          </div>
+
+          <!-- Theme Toggle -->
+          <div class="flex items-center justify-center pt-2 border-t">
+            <button
+              @click="toggleMode"
+              class="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 hover:bg-accent px-3 py-2 rounded-md w-full"
+            >
+              <component
+                :is="mode === 'dark' ? SunIcon : MoonIcon"
+                class="w-4 h-4 flex-shrink-0"
+              />
+              <span class="font-medium truncate">
+                {{ mode === 'dark' ? 'Light Mode' : 'Dark Mode' }}
+              </span>
+            </button>
           </div>
         </div>
       </SidebarFooter>

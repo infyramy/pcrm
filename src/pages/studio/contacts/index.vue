@@ -47,6 +47,7 @@
       @update:page-size="handlePageSizeChange"
       @update:sort="handleSort"
       @update:filters="handleFilters"
+      :loading="isLoading"
     >
       <!-- Custom template for name column -->
       <template #cell-name="{ item }">
@@ -207,7 +208,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Breadcrumb from "@/layouts/components/PageHeader.vue";
 import { Button } from "@/components/ui/button";
@@ -227,6 +228,7 @@ const router = useRouter();
 
 // Loading state for workspace setup
 const isLoadingWorkspace = ref(false);
+const isLoading = ref(false);
 
 const breadcrumbs = [
   {
@@ -373,6 +375,30 @@ const contacts = ref<Contact[]>([
   },
 ]);
 
+// Initialize data on component mount
+onMounted(async () => {
+  await fetchContacts();
+});
+
+// Fetch contacts from API (currently using mock data)
+const fetchContacts = async () => {
+  isLoading.value = true;
+  try {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // In a real implementation, you would fetch from API here
+    // const response = await contactService.getContacts(currentPage.value, pageSize.value);
+    // contacts.value = response.contacts;
+    
+    // For now, using mock data (no changes needed)
+  } catch (error) {
+    console.error("Error fetching contacts:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 // Utility functions
 const getStatusVariant = (status: Contact["status"]) => {
   switch (status) {
@@ -418,11 +444,11 @@ const sendWhatsApp = (contactId: string) => {
 
 // DataTable event handlers
 const handlePageChange = (page: number) => {
-  console.log("Page changed to:", page);
+  fetchContacts();
 };
 
 const handlePageSizeChange = (pageSize: number) => {
-  console.log("Page size changed to:", pageSize);
+  fetchContacts();
 };
 
 const handleSort = (
@@ -430,10 +456,14 @@ const handleSort = (
   direction: "asc" | "desc" | null
 ) => {
   console.log("Sort changed:", { column, direction });
+  // Implement sorting logic if needed
+  fetchContacts();
 };
 
 const handleFilters = (filters: Record<string, string>) => {
   console.log("Filters changed:", filters);
+  // Implement filtering logic if needed
+  fetchContacts();
 };
 </script>
 

@@ -121,6 +121,7 @@ export interface FormBuilder {
     successMessage?: string
     redirectUrl?: string
     allowMultipleSubmissions?: boolean
+    autoHideSuccess?: boolean
     requireAuthentication?: boolean
   }
   createdAt: Date

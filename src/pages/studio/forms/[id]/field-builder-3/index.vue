@@ -1,806 +1,1345 @@
 <template>
   <div class="h-screen flex overflow-hidden bg-background">
-    <!-- Left Panel - Field Types -->
-    <div class="bg-card border-r border-border flex flex-col flex-shrink-0">
-      <!-- Header -->
-      <div class="px-6 py-4 border-b border-border flex-shrink-0">
-        <h2 class="text-lg font-semibold text-card-foreground">Field Library</h2>
-        <p class="text-sm text-muted-foreground">Drag components to build your form</p>
-      </div>
+    <!-- Left Panel - Field Types (Always Visible) -->
+    <div
+      v-if="!showSuccessConfig"
+      class="w-80 border-r border-border flex-shrink-0 h-full"
+    >
+      <div class="w-80 bg-card flex flex-col h-full">
+        <!-- Header -->
+        <div class="px-6 py-5 border-b border-border flex-shrink-0 bg-muted/30">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl flex items-center justify-center border border-blue-200 dark:border-blue-800"
+            >
+              <Component class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold text-card-foreground">
+                Field Library
+              </h2>
+              <p class="text-sm text-muted-foreground">
+                Drag components to build your form
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <!-- Field Categories -->
-      <div class="flex-1 overflow-y-auto">
-        <div class="p-6 space-y-6">
-          <div v-for="category in fieldCategories" :key="category.name">
-            <!-- Category Header -->
-            <div class="mb-4">
-              <h3
-                class="text-sm font-medium text-card-foreground uppercase tracking-wide mb-4"
-              >
-                {{ category.name }}
-              </h3>
+        <!-- Field Categories -->
+        <div class="flex-1 overflow-y-auto min-h-0">
+          <div class="p-6 space-y-8">
+            <div v-for="category in fieldCategories" :key="category.name">
+              <!-- Category Header -->
+              <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-primary rounded-full"></div>
+                  <h3
+                    class="text-sm font-semibold text-card-foreground uppercase tracking-wider"
+                  >
+                    {{ category.name }}
+                  </h3>
+                </div>
 
-              <!-- Category Fields -->
-              <div class="space-y-3">
-                <draggable
-                  :list="category.fields"
-                  :group="{ name: 'fields', pull: 'clone', put: false }"
-                  :clone="cloneField"
-                  :sort="false"
-                  item-key="type"
-                >
-                  <template #item="{ element }">
-                    <div
-                      class="group flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                    >
-                      <!-- Icon -->
+                <!-- Category Fields -->
+                <div class="space-y-2">
+                  <draggable
+                    :list="category.fields"
+                    :group="{ name: 'fields', pull: 'clone', put: false }"
+                    :clone="cloneField"
+                    :sort="false"
+                    item-key="type"
+                  >
+                    <template #item="{ element }">
                       <div
-                        class="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-muted rounded-lg group-hover:bg-primary/10 transition-colors"
+                        class="group flex items-center gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm transition-all duration-200 cursor-pointer"
                       >
-                        <Icon
-                          :icon="element.icon"
-                          class="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors"
-                        />
-                      </div>
-
-                      <!-- Content -->
-                      <div class="flex-1 min-w-0">
+                        <!-- Icon -->
                         <div
-                          class="text-sm font-medium text-card-foreground group-hover:text-primary transition-colors"
+                          class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-muted rounded-lg group-hover:bg-primary/10 group-hover:scale-105 transition-all duration-200"
                         >
-                          {{ element.label }}
+                          <component
+                            :is="getFieldIcon(element.type)"
+                            class="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors"
+                          />
                         </div>
-                        <div
-                          class="text-xs text-muted-foreground group-hover:text-primary/70 transition-colors"
-                        >
-                          {{ element.description }}
-                        </div>
-                      </div>
 
-                      <!-- Drag Handle -->
-                      <div
-                        class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <Icon
-                          icon="radix-icons:drag-handle-dots-2"
-                          class="h-4 w-4 text-muted-foreground"
-                        />
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0">
+                          <div
+                            class="text-sm font-medium text-card-foreground group-hover:text-primary transition-colors"
+                          >
+                            {{ element.label }}
+                          </div>
+                          <div
+                            class="text-xs text-muted-foreground group-hover:text-primary/70 transition-colors line-clamp-1"
+                          >
+                            {{ element.description }}
+                          </div>
+                        </div>
+
+                        <!-- Drag Handle -->
+                        <div
+                          class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <GripVertical class="h-4 w-4 text-muted-foreground" />
+                        </div>
                       </div>
-                    </div>
-                  </template>
-                </draggable>
+                    </template>
+                  </draggable>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Form Stats -->
-      <!-- <div class="p-6 border-t border-border bg-muted/50 flex-shrink-0">
-        <div class="text-center">
-          <div class="text-lg font-semibold text-card-foreground">
-            {{ formBuilder.fields.length }}
-          </div>
-          <div class="text-sm text-muted-foreground">
-            {{ formBuilder.fields.length === 1 ? "Field" : "Fields" }} in form
+        <!-- Form Stats Footer -->
+        <div class="p-6 border-t border-border bg-muted/30 flex-shrink-0">
+          <div class="text-center space-y-2">
+            <div class="flex items-center justify-center gap-2">
+              <Layers3 class="w-4 h-4 text-muted-foreground" />
+              <div class="text-lg font-semibold text-card-foreground">
+                {{ formBuilder.fields.length }}
+              </div>
+            </div>
+            <div class="text-sm text-muted-foreground">
+              {{ formBuilder.fields.length === 1 ? "Field" : "Fields" }} in form
+            </div>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <div
+      class="flex-1 flex flex-col min-w-0 overflow-hidden bg-background h-full"
+    >
       <!-- Header -->
-      <div class="bg-card border-b border-border px-6 py-4 flex-shrink-0">
-        <div class="flex items-center justify-end">
-          <!-- Right Section - Actions -->
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <!-- Status Info -->
-            <div class="hidden lg:flex items-center gap-3 mr-3">
-              <div class="text-right">
-                <div class="text-sm font-medium text-card-foreground">
-                  {{ formBuilder.fields.length }}
-                  {{ formBuilder.fields.length === 1 ? "Field" : "Fields" }}
+      <div
+        class="bg-card/95 backdrop-blur-sm border-b border-border/60 px-4 sm:px-6 py-3 flex-shrink-0 shadow-sm"
+      >
+        <div class="flex items-center justify-between">
+          <!-- Left Section - Navigation and Context -->
+          <div class="flex items-center gap-3 min-w-0 flex-1">
+            <!-- Context Information -->
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <!-- Status Icon -->
+              <div class="relative" v-if="showSuccessConfig">
+                <div
+                  class="w-9 h-9 bg-gradient-to-br rounded-xl flex items-center justify-center border shadow-sm transition-all duration-200"
+                  :class="
+                    showSuccessConfig
+                      ? 'from-green-50 to-emerald-100 dark:from-green-950/40 dark:to-emerald-900/40 border-green-200/60 dark:border-emerald-700/50'
+                      : showPreview
+                      ? 'from-indigo-50 to-blue-100 dark:from-indigo-950/40 dark:to-blue-900/40 border-indigo-200/60 dark:border-blue-700/50'
+                      : 'from-slate-50 to-gray-100 dark:from-slate-900/40 dark:to-gray-800/40 border-slate-200/60 dark:border-gray-700/50'
+                  "
+                >
+                  <CheckCircle2
+                    class="h-6 w-6 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0"
+                  />
                 </div>
-                <div class="text-xs text-muted-foreground">
-                  {{ showPreview ? "Preview Mode" : "Edit Mode" }}
-                </div>
+                <!-- Status Indicator -->
+                <div
+                  class="absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-background shadow-sm transition-colors duration-200"
+                  :class="
+                    showSuccessConfig
+                      ? 'bg-green-500 dark:bg-emerald-400'
+                      : showPreview
+                      ? 'bg-indigo-500 dark:bg-blue-400'
+                      : 'bg-slate-500 dark:bg-gray-400'
+                  "
+                ></div>
               </div>
-              <div class="w-px h-8 bg-border"></div>
+
+              <!-- Title and Description -->
+              <div class="min-w-0 flex-1" v-if="showSuccessConfig">
+                <div class="flex items-center gap-2">
+                  <h1 class="text-base font-semibold text-foreground truncate">
+                    Success Configuration
+                  </h1>
+                </div>
+                <p class="text-sm text-muted-foreground/80 truncate mt-0.5">
+                  Configure submission experience
+                </p>
+              </div>
             </div>
+          </div>
 
-            <!-- Action Buttons -->
-            <Button
-              @click="loadForm"
-              variant="outline"
-              size="sm"
-              class="h-9 px-3"
-            >
-              <Icon icon="radix-icons:upload" class="h-4 w-4 mr-1.5" />
-              <span class="hidden md:inline">Load</span>
-            </Button>
-
-            <Button
-              @click="exportForm"
-              variant="outline"
-              size="sm"
-              class="h-9 px-3"
-            >
-              <Icon icon="radix-icons:share-1" class="h-4 w-4 mr-1.5" />
-              <span class="hidden md:inline">Export</span>
-            </Button>
-
-            <Button
-              @click="togglePreview"
-              :variant="showPreview ? 'default' : 'outline'"
-              size="sm"
-              class="h-9 px-3"
-              :class="
-                showPreview ? 'bg-green-600 hover:bg-green-700 text-white' : ''
+          <!-- Right Section - Controls and Actions -->
+          <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <!-- Mode Switcher -->
+            <Tabs
+              :default-value="showSuccessConfig ? 'success' : 'builder'"
+              class="hidden lg:flex"
+              @update:model-value="
+                (value) =>
+                  value === 'success' ? goToSuccessConfig() : goToFormBuilder()
               "
             >
-              <Icon
-                :icon="
-                  showPreview ? 'radix-icons:pencil-1' : 'radix-icons:eye-open'
-                "
-                class="h-4 w-4 mr-1.5"
-              />
-              <span class="hidden md:inline">{{
-                showPreview ? "Edit" : "Preview"
-              }}</span>
-            </Button>
+              <TabsList
+                class="grid w-full grid-cols-2 h-8 bg-muted/30 border border-border/50 shadow-sm"
+              >
+                <TabsTrigger
+                  value="builder"
+                  class="h-7 px-3 text-xs font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border/50"
+                >
+                  <div class="flex gap-2 items-center justify-center">
+                    <Component class="h-3.5 w-3.5" />
+                    <span class="hidden sm:inline">Builder</span>
+                  </div>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="success"
+                  class="h-7 px-3 text-xs font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border/50"
+                >
+                  <div class="flex gap-2 items-center justify-center">
+                    <CheckCircle2 class="h-3.5 w-3.5" />
+                    <span class="hidden sm:inline">Success</span>
+                  </div>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
 
-            <Button
-              @click="saveForm"
-              size="sm"
-              :disabled="isSaving"
-              class="h-9 px-4"
-            >
-              <Icon
-                v-if="isSaving"
-                icon="radix-icons:update"
-                class="animate-spin h-4 w-4 mr-1.5"
-              />
-              <Icon v-else icon="radix-icons:download" class="h-4 w-4 mr-1.5" />
-              <span class="hidden sm:inline">{{
-                isSaving ? "Saving..." : "Save"
-              }}</span>
-            </Button>
+            <!-- Progress Indicator (Desktop) -->
+            <div class="hidden xl:flex items-center gap-3">
+              <div class="text-right">
+                <div class="text-sm font-medium text-foreground">
+                  {{
+                    showSuccessConfig
+                      ? "Configuration"
+                      : formBuilder.fields.length +
+                        " Field" +
+                        (formBuilder.fields.length !== 1 ? "s" : "")
+                  }}
+                </div>
+                <div class="text-xs text-muted-foreground/70">
+                  {{
+                    showSuccessConfig
+                      ? "Customize experience"
+                      : showPreview
+                      ? "Preview mode active"
+                      : "Ready to build"
+                  }}
+                </div>
+              </div>
+              <div class="w-px h-8 bg-border/40"></div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-1.5">
+              <!-- Actions Dropdown -->
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    class="h-8 px-3 border-border/50 hover:bg-muted/60 hover:border-border/70 transition-all duration-200"
+                  >
+                    <Ellipsis class="h-4 w-4 mr-1.5" />
+                    <span class="hidden sm:inline text-xs">Actions</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" class="w-48">
+                  <DropdownMenuItem @click="loadForm" class="cursor-pointer">
+                    <Upload class="h-4 w-4 mr-2" />
+                    Load Form
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @click="exportForm" class="cursor-pointer">
+                    <Download class="h-4 w-4 mr-2" />
+                    Export Form
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <!-- Primary Save Button -->
+              <Button
+                @click="togglePreview"
+                class="cursor-pointer"
+                variant="outline"
+                size="sm"
+              >
+                <Edit3 v-if="showPreview" class="h-4 w-4 mr-2" />
+                <Eye v-else class="h-4 w-4 mr-2" />
+                {{ showPreview ? "Exit Preview" : "Preview Form" }}
+              </Button>
+
+              <Button
+                @click="saveForm"
+                size="sm"
+                :disabled="isSaving"
+                class="h-8 px-4 font-medium shadow-sm bg-primary hover:bg-primary/90 transition-all duration-200 border-0"
+              >
+                <RotateCw v-if="isSaving" class="animate-spin h-4 w-4 mr-1.5" />
+                <Save v-else class="h-4 w-4 mr-1.5" />
+                <span class="text-xs">{{
+                  isSaving
+                    ? "Saving..."
+                    : showSuccessConfig
+                    ? "Save Config"
+                    : "Save"
+                }}</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Canvas Area -->
-      <div class="flex-1 overflow-y-auto p-6">
-        <div v-if="showPreview" class="max-w-2xl mx-auto">
-          <!-- Preview Mode -->
-          <div class="space-y-6">
-            <!-- Form Header -->
-            <div class="text-center space-y-2">
-              <h2 class="text-2xl font-bold text-foreground">
-                {{ formBuilder.title }}
-              </h2>
-              <p v-if="formBuilder.description" class="text-base text-muted-foreground">
-                {{ formBuilder.description }}
+      <div class="flex-1 overflow-hidden min-h-0 relative">
+        <div class="h-full overflow-y-auto">
+          <!-- Success Configuration Mode -->
+          <Transition name="content-fade" mode="out-in" appear>
+            <!-- Success Configuration Content -->
+            <div v-if="showSuccessConfig" key="success-config" class="h-full">
+              <div
+                class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 min-h-full"
+              >
+                <!-- Header Section -->
+                <!-- <div class="text-center space-y-4">
+                  <div
+                    class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-2xl border border-green-200 dark:border-green-800"
+                  >
+                    <CheckCircle2
+                      class="w-10 h-10 text-green-600 dark:text-green-400"
+                    />
+                  </div>
+                  <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-foreground">
+                      Success Configuration
+                    </h1>
+                    <p
+                      class="text-base sm:text-lg text-muted-foreground mt-2 max-w-xl mx-auto"
+                    >
+                      Customize your form's submit button text and success
+                      message.
+                    </p>
+                  </div>
+                </div> -->
+
+                <!-- Configuration Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <!-- Submit Button Configuration -->
+                  <div
+                    class="bg-card border border-border rounded-xl p-6 space-y-6"
+                  >
+                    <div class="flex items-start gap-4">
+                      <div
+                        class="flex-shrink-0 w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center border border-green-200 dark:border-green-800"
+                      >
+                        <MessageSquare
+                          class="w-6 h-6 text-green-600 dark:text-green-400"
+                        />
+                      </div>
+                      <div class="flex-1">
+                        <h2 class="text-xl font-semibold text-card-foreground">
+                          Submit Button
+                        </h2>
+                        <p class="text-sm text-muted-foreground mt-1">
+                          Customize the text displayed on your form's submit
+                          button
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="space-y-2">
+                        <Label
+                          for="submit-button-text"
+                          class="text-sm font-medium"
+                          >Button Text</Label
+                        >
+                        <Input
+                          id="submit-button-text"
+                          v-model="formBuilder.settings.submitButtonText"
+                          placeholder="e.g., Submit Form, Send Message, Book Now..."
+                          class="h-11"
+                          maxlength="50"
+                        />
+                        <p class="text-xs text-muted-foreground">
+                          {{
+                            formBuilder.settings.submitButtonText?.length || 0
+                          }}/50 characters
+                        </p>
+                      </div>
+
+                      <!-- Live Preview -->
+                      <div class="space-y-3">
+                        <Label class="text-sm font-medium">Preview</Label>
+                        <div
+                          class="p-4 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/20"
+                        >
+                          <Button
+                            class="h-11 px-8 font-medium"
+                            disabled
+                            :class="
+                              formBuilder.settings.submitButtonText
+                                ? ''
+                                : 'opacity-60'
+                            "
+                          >
+                            <Send class="w-4 h-4 mr-2" />
+                            {{
+                              formBuilder.settings.submitButtonText || "Submit"
+                            }}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Success Message Configuration -->
+                  <div
+                    class="bg-card border border-border rounded-xl p-6 space-y-6"
+                  >
+                    <div class="flex items-start gap-4">
+                      <div
+                        class="flex-shrink-0 w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center border border-green-200 dark:border-green-800"
+                      >
+                        <MessageCircle
+                          class="w-6 h-6 text-green-600 dark:text-green-400"
+                        />
+                      </div>
+                      <div class="flex-1">
+                        <h2 class="text-xl font-semibold text-card-foreground">
+                          Success Message
+                        </h2>
+                        <p class="text-sm text-muted-foreground mt-1">
+                          Message shown to users after successful submission
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div class="space-y-2">
+                        <Label for="success-message" class="text-sm font-medium"
+                          >Success Message</Label
+                        >
+                        <Textarea
+                          id="success-message"
+                          v-model="formBuilder.settings.successMessage"
+                          placeholder="e.g., Thank you! Your form has been submitted successfully. We'll get back to you soon."
+                          rows="4"
+                          class="resize-none"
+                          maxlength="200"
+                        />
+                        <p class="text-xs text-muted-foreground">
+                          {{
+                            formBuilder.settings.successMessage?.length || 0
+                          }}/200 characters
+                        </p>
+                      </div>
+
+                      <!-- Live Preview -->
+                      <div class="space-y-3">
+                        <Label class="text-sm font-medium">Preview</Label>
+                        <div
+                          class="p-4 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg"
+                        >
+                          <div class="flex items-start gap-3">
+                            <CheckCircle2
+                              class="h-6 w-6 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0"
+                            />
+                            <div class="flex-1">
+                              <p
+                                class="text-sm text-green-800 dark:text-green-200 leading-relaxed"
+                              >
+                                {{
+                                  formBuilder.settings.successMessage ||
+                                  "Thank you for your submission!"
+                                }}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div
+                  class="sticky bottom-0 bg-background/90 backdrop-blur-sm border-t border-border -mx-4 sm:-mx-6 px-4 sm:px-6 py-4 sm:py-6 mt-8"
+                >
+                  <div
+                    class="max-w-3xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3"
+                  >
+                    <Button
+                      @click="goToFormBuilder"
+                      variant="outline"
+                      size="lg"
+                      class="h-11 px-6 order-2 sm:order-1"
+                    >
+                      <ArrowLeft class="w-4 h-4 mr-2" />
+                      Back to Form Builder
+                    </Button>
+
+                    <div class="flex items-center gap-3 order-1 sm:order-2">
+                      <Button
+                        @click="previewConfiguration"
+                        variant="outline"
+                        size="lg"
+                        class="h-11 px-6 flex-1 sm:flex-initial"
+                      >
+                        <Eye class="w-4 h-4 mr-2" />
+                        Preview
+                      </Button>
+                      <Button
+                        @click="saveForm"
+                        :disabled="isSaving || !isConfigurationValid"
+                        size="lg"
+                        class="h-11 px-8 flex-1 sm:flex-initial"
+                      >
+                        <RotateCw
+                          v-if="isSaving"
+                          class="animate-spin w-4 h-4 mr-2"
+                        />
+                        <Save v-else class="w-4 h-4 mr-2" />
+                        {{ isSaving ? "Saving..." : "Save Configuration" }}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Preview Mode -->
+            <div v-else-if="showPreview" key="form-preview" class="h-full">
+              <div
+                class="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 min-h-full"
+              >
+                <div class="space-y-6">
+                  <!-- Form Fields -->
+                  <form @submit.prevent="handleSubmit" class="space-y-6">
+                    <div
+                      v-for="field in visibleFields"
+                      :key="field.id"
+                      class="space-y-3 p-4 bg-card rounded-xl border border-border/50"
+                    >
+                      <!-- Field Label -->
+                      <label
+                        :for="field.id"
+                        class="block text-sm font-medium text-foreground"
+                      >
+                        {{ field.label }}
+                        <span
+                          v-if="field.validation?.required"
+                          class="text-destructive ml-1"
+                          >*</span
+                        >
+                      </label>
+
+                      <!-- Field Description -->
+                      <p
+                        v-if="field.description"
+                        class="text-sm text-muted-foreground"
+                      >
+                        {{ field.description }}
+                      </p>
+
+                      <!-- Field Input Based on Type -->
+                      <div>
+                        <!-- Text Input -->
+                        <Input
+                          v-if="field.type === 'text'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          :placeholder="field.placeholder"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- Email Input -->
+                        <Input
+                          v-else-if="field.type === 'email'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          type="email"
+                          :placeholder="field.placeholder"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- Number Input -->
+                        <Input
+                          v-else-if="field.type === 'number'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          type="number"
+                          :placeholder="field.placeholder"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- Date Input -->
+                        <Input
+                          v-else-if="field.type === 'date'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          type="date"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- Time Input -->
+                        <Input
+                          v-else-if="field.type === 'time'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          type="time"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- DateTime Input -->
+                        <Input
+                          v-else-if="field.type === 'datetime'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          type="datetime-local"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- Phone Input -->
+                        <Input
+                          v-else-if="field.type === 'phone'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          type="tel"
+                          :placeholder="field.placeholder"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- URL Input -->
+                        <Input
+                          v-else-if="field.type === 'url'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          type="url"
+                          :placeholder="field.placeholder"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- Password Input -->
+                        <Input
+                          v-else-if="field.type === 'password'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          type="password"
+                          :placeholder="field.placeholder"
+                          :required="field.validation?.required"
+                          class="h-11"
+                        />
+
+                        <!-- Textarea -->
+                        <Textarea
+                          v-else-if="field.type === 'textarea'"
+                          :id="field.id"
+                          v-model="formData[field.id]"
+                          :placeholder="field.placeholder"
+                          :required="field.validation?.required"
+                          rows="4"
+                          class="resize-none"
+                        />
+
+                        <!-- Select Dropdown -->
+                        <Select
+                          v-else-if="field.type === 'select'"
+                          v-model="formData[field.id]"
+                          :required="field.validation?.required"
+                        >
+                          <SelectTrigger :id="field.id" class="h-11">
+                            <SelectValue
+                              :placeholder="
+                                field.placeholder || 'Choose an option...'
+                              "
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem
+                              v-for="option in field.options"
+                              :key="option.id"
+                              :value="option.value"
+                            >
+                              {{ option.label }}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        <!-- Radio Buttons -->
+                        <RadioGroup
+                          v-else-if="field.type === 'radio'"
+                          v-model="formData[field.id]"
+                          :required="field.validation?.required"
+                        >
+                          <div class="space-y-3">
+                            <div
+                              v-for="option in field.options"
+                              :key="option.id"
+                              class="flex items-center space-x-3"
+                            >
+                              <RadioGroupItem
+                                :value="option.value"
+                                :id="option.id"
+                              />
+                              <Label
+                                :for="option.id"
+                                class="text-sm cursor-pointer"
+                                >{{ option.label }}</Label
+                              >
+                            </div>
+                          </div>
+                        </RadioGroup>
+
+                        <!-- Checkboxes -->
+                        <div v-else-if="field.type === 'checkbox'">
+                          <div class="space-y-3">
+                            <div
+                              v-for="option in field.options"
+                              :key="option.id"
+                              class="flex items-center space-x-3"
+                            >
+                              <Checkbox
+                                :id="option.id"
+                                :checked="
+                                  isCheckboxChecked(field.id, option.value)
+                                "
+                                @update:checked="
+                                  updateCheckboxValue(
+                                    field.id,
+                                    option.value,
+                                    $event
+                                  )
+                                "
+                              />
+                              <Label
+                                :for="option.id"
+                                class="text-sm cursor-pointer"
+                                >{{ option.label }}</Label
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Field Validation Error -->
+                      <p
+                        v-if="fieldErrors[field.id]"
+                        class="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg border border-destructive/20"
+                      >
+                        <TriangleAlert class="w-3 h-3 inline mr-1" />
+                        {{ fieldErrors[field.id] }}
+                      </p>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div
+                      v-if="visibleFields.length > 0"
+                      class="flex flex-col sm:flex-row justify-end gap-3 pt-6"
+                    >
+                      <Button
+                        type="button"
+                        variant="outline"
+                        @click="resetForm"
+                        size="default"
+                        class="h-11 px-6 order-2 sm:order-1"
+                      >
+                        <RotateCcw class="w-4 h-4 mr-2" />
+                        Reset Form
+                      </Button>
+                      <Button
+                        type="submit"
+                        :disabled="isSubmitting"
+                        size="default"
+                        class="h-11 px-8 font-medium order-1 sm:order-2"
+                      >
+                        <RotateCw
+                          v-if="isSubmitting"
+                          class="animate-spin h-4 w-4 mr-2"
+                        />
+                        <Send v-else class="w-4 h-4 mr-2" />
+                        {{ formBuilder.settings?.submitButtonText || "Submit" }}
+                      </Button>
+                    </div>
+                  </form>
+
+                  <!-- Success Message -->
+                  <div
+                    v-if="showSuccessMessage"
+                    class="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-xl p-6 animate-in slide-in-from-top-2 duration-300"
+                  >
+                    <div class="flex items-start gap-3">
+                      <CheckCircle2
+                        class="h-6 w-6 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0"
+                      />
+                      <div class="flex-1">
+                        <h3
+                          class="text-lg font-semibold text-green-800 dark:text-green-200 mb-1"
+                        >
+                          Success!
+                        </h3>
+                        <p
+                          class="text-sm text-green-700 dark:text-green-300 leading-relaxed"
+                        >
+                          {{
+                            formBuilder.settings?.successMessage ||
+                            "Thank you for your submission!"
+                          }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Builder Edit Mode -->
+            <div v-else key="form-builder" class="h-full">
+              <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 h-full">
+                <div
+                  class="bg-gradient-to-br from-card/50 to-card rounded-2xl border border-border p-6 sm:p-8 h-full flex flex-col shadow-sm"
+                >
+                  <draggable
+                    v-model="formBuilder.fields"
+                    group="fields"
+                    item-key="id"
+                    class="flex-1 space-y-6 min-h-0 overflow-y-auto"
+                    :empty-insert-threshold="40"
+                  >
+                    <template #item="{ element, index }">
+                      <div
+                        class="relative group"
+                        :class="{
+                          'ring-2 ring-primary/50 ring-offset-2 ring-offset-background':
+                            selectedFieldId === element.id,
+                        }"
+                      >
+                        <!-- Field Card -->
+                        <div
+                          class="border border-border/60 rounded-2xl p-6 bg-card/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-lg hover:bg-card transition-all duration-300 cursor-pointer group-hover:scale-[1.01]"
+                          @click="selectField(element.id)"
+                        >
+                          <div class="flex items-start justify-between mb-4">
+                            <!-- Field Info -->
+                            <div class="flex-1 min-w-0 space-y-2">
+                              <div class="flex items-center gap-3">
+                                <div
+                                  class="w-8 h-8 bg-gradient-to-br from-muted to-muted/50 rounded-lg flex items-center justify-center border border-border/50"
+                                >
+                                  <component
+                                    :is="getFieldIcon(element.type)"
+                                    class="w-4 h-4 text-muted-foreground"
+                                  />
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                  <label
+                                    class="text-base font-semibold text-card-foreground block leading-tight truncate"
+                                  >
+                                    {{ element.label }}
+                                    <span
+                                      v-if="element.validation?.required"
+                                      class="text-destructive ml-1"
+                                      >*</span
+                                    >
+                                  </label>
+                                  <p
+                                    class="text-xs text-muted-foreground font-medium uppercase tracking-wider"
+                                  >
+                                    {{ getFieldTypeName(element.type) }}
+                                  </p>
+                                </div>
+                              </div>
+                              <div
+                                class="text-sm text-muted-foreground leading-relaxed"
+                                v-if="element.description"
+                              >
+                                {{ element.description }}
+                              </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div
+                              class="flex items-center gap-2 ml-4 flex-shrink-0"
+                              :class="
+                                selectedFieldId === element.id
+                                  ? 'opacity-100'
+                                  : 'opacity-0 group-hover:opacity-100 transition-opacity duration-200'
+                              "
+                            >
+                              <DropdownMenu>
+                                <DropdownMenuTrigger as-child>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    class="h-8 w-8 p-0 hover:bg-muted rounded-lg"
+                                    @click.stop
+                                  >
+                                    <Ellipsis
+                                      class="h-4 w-4 text-muted-foreground"
+                                    />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" class="w-48">
+                                  <DropdownMenuItem
+                                    @click.stop="selectField(element.id)"
+                                    class="cursor-pointer"
+                                  >
+                                    <Settings class="h-4 w-4 mr-2" />
+                                    Configure Field
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    @click.stop="duplicateField(element)"
+                                    class="cursor-pointer"
+                                  >
+                                    <Copy class="h-4 w-4 mr-2" />
+                                    Duplicate Field
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    @click.stop="deleteField(element.id)"
+                                    class="cursor-pointer text-destructive focus:text-destructive"
+                                  >
+                                    <Trash2 class="h-4 w-4 mr-2" />
+                                    Delete Field
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </div>
+
+                          <!-- Field Preview -->
+                          <div
+                            class="bg-muted/30 rounded-xl p-4 border border-border/30"
+                          >
+                            <Input
+                              v-if="
+                                ['text', 'email', 'number'].includes(
+                                  element.type
+                                )
+                              "
+                              :placeholder="
+                                element.placeholder ||
+                                `Enter ${element.type}...`
+                              "
+                              disabled
+                              class="h-10 bg-background/50"
+                            />
+                            <Input
+                              v-else-if="
+                                [
+                                  'date',
+                                  'time',
+                                  'datetime',
+                                  'phone',
+                                  'url',
+                                  'password',
+                                ].includes(element.type)
+                              "
+                              :type="
+                                element.type === 'datetime'
+                                  ? 'datetime-local'
+                                  : element.type === 'phone'
+                                  ? 'tel'
+                                  : element.type
+                              "
+                              :placeholder="
+                                ['phone', 'url', 'password'].includes(
+                                  element.type
+                                )
+                                  ? element.placeholder ||
+                                    `Enter ${element.type}...`
+                                  : undefined
+                              "
+                              disabled
+                              class="h-10 bg-background/50"
+                            />
+                            <Textarea
+                              v-else-if="element.type === 'textarea'"
+                              :placeholder="
+                                element.placeholder || 'Enter your message...'
+                              "
+                              disabled
+                              rows="3"
+                              class="resize-none bg-background/50"
+                            />
+                            <div
+                              v-else-if="element.type === 'select'"
+                              class="p-3 border border-border/50 rounded-lg text-muted-foreground text-sm h-10 flex items-center bg-background/50"
+                            >
+                              {{ element.placeholder || "Select an option..." }}
+                            </div>
+                            <div
+                              v-else-if="
+                                element.type === 'radio' && element.options
+                              "
+                              class="space-y-3"
+                            >
+                              <div
+                                v-for="option in element.options.slice(0, 3)"
+                                :key="option.id"
+                                class="flex items-center space-x-3"
+                              >
+                                <div
+                                  class="h-4 w-4 border-2 border-border rounded-full bg-background/50"
+                                ></div>
+                                <span class="text-sm text-muted-foreground">{{
+                                  option.label
+                                }}</span>
+                              </div>
+                              <div
+                                v-if="element.options.length > 3"
+                                class="text-xs text-muted-foreground/70 ml-7"
+                              >
+                                +{{ element.options.length - 3 }} more options
+                              </div>
+                            </div>
+                            <div
+                              v-else-if="
+                                element.type === 'checkbox' && element.options
+                              "
+                              class="space-y-3"
+                            >
+                              <div
+                                v-for="option in element.options.slice(0, 3)"
+                                :key="option.id"
+                                class="flex items-center space-x-3"
+                              >
+                                <div
+                                  class="h-4 w-4 border-2 border-border rounded bg-background/50"
+                                ></div>
+                                <span class="text-sm text-muted-foreground">{{
+                                  option.label
+                                }}</span>
+                              </div>
+                              <div
+                                v-if="element.options.length > 3"
+                                class="text-xs text-muted-foreground/70 ml-7"
+                              >
+                                +{{ element.options.length - 3 }} more options
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+                    <template #footer>
+                      <div
+                        v-if="formBuilder.fields.length === 0"
+                        class="text-center py-16 space-y-6"
+                      >
+                        <div
+                          class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-muted/50 to-muted/30 rounded-2xl border-2 border-dashed border-muted-foreground/30"
+                        >
+                          <Component
+                            class="w-10 h-10 text-muted-foreground/60"
+                          />
+                        </div>
+                        <div class="space-y-2">
+                          <h3
+                            class="text-xl font-semibold text-card-foreground"
+                          >
+                            Start Building Your Form
+                          </h3>
+                          <p
+                            class="text-muted-foreground max-w-md mx-auto leading-relaxed"
+                          >
+                            Drag and drop field types from the left panel to
+                            begin creating your form. You can always rearrange,
+                            edit, or remove fields later.
+                          </p>
+                        </div>
+                        <div
+                          class="flex items-center justify-center gap-2 text-sm text-muted-foreground/70"
+                        >
+                          <GripVertical class="w-4 h-4" />
+                          <span>Drag components here to get started</span>
+                        </div>
+                      </div>
+                    </template>
+                  </draggable>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </div>
+    </div>
+
+    <!-- Field Configuration Sheet -->
+    <Sheet
+      :open="!!selectedField"
+      @update:open="(open) => !open && (selectedFieldId = null)"
+    >
+      <SheetContent side="right" class="w-[400px] sm:w-[540px] overflow-y-auto">
+        <SheetHeader v-if="selectedField" class="space-y-1">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl flex items-center justify-center border border-primary/20"
+            >
+              <component
+                :is="getFieldIcon(selectedField.type)"
+                class="h-5 w-5 text-primary"
+              />
+            </div>
+            <div class="min-w-0 flex-1">
+              <SheetTitle
+                class="text-lg font-semibold text-card-foreground truncate"
+              >
+                {{ selectedField.label }}
+              </SheetTitle>
+              <SheetDescription
+                class="text-sm text-muted-foreground font-medium"
+              >
+                {{ getFieldTypeName(selectedField.type) }} Configuration
+              </SheetDescription>
+            </div>
+          </div>
+        </SheetHeader>
+
+        <!-- Configuration Content -->
+        <div v-if="selectedField" class="mt-6 space-y-6">
+          <!-- Quick Actions -->
+          <div class="space-y-3">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-6 h-6 bg-slate-50 dark:bg-slate-900/20 rounded-lg flex items-center justify-center"
+              >
+                <Zap class="w-3 h-3 text-slate-600 dark:text-slate-400" />
+              </div>
+              <h3 class="text-sm font-semibold text-card-foreground">
+                Quick Actions
+              </h3>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <Button
+                @click="
+                  duplicateField(selectedField);
+                  selectedFieldId = null;
+                "
+                variant="outline"
+                size="sm"
+                class="h-10 flex-1"
+              >
+                <Copy class="h-4 w-4 mr-2" />
+                Duplicate
+              </Button>
+              <Button
+                @click="
+                  deleteField(selectedField.id);
+                  selectedFieldId = null;
+                "
+                variant="outline"
+                size="sm"
+                class="h-10 flex-1 text-destructive border-destructive/20 hover:bg-destructive/10"
+              >
+                <Trash2 class="h-4 w-4 mr-2" />
+                Delete
+              </Button>
+            </div>
+          </div>
+
+          <!-- Basic Settings -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-6 h-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center"
+              >
+                <Settings class="w-3 h-3 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 class="text-sm font-semibold text-card-foreground">
+                Basic Settings
+              </h3>
+            </div>
+
+            <!-- Field Label -->
+            <div class="space-y-2">
+              <Label for="field-label" class="text-sm font-medium"
+                >Field Label</Label
+              >
+              <Input
+                id="field-label"
+                v-model="selectedField.label"
+                placeholder="Enter field label..."
+                class="h-10"
+              />
+              <p class="text-xs text-muted-foreground">
+                This label will be displayed above the field
               </p>
             </div>
 
-            <!-- Form Fields -->
-            <form @submit.prevent="handleSubmit" class="space-y-5">
-              <div
-                v-for="field in visibleFields"
-                :key="field.id"
-                class="space-y-2"
-              >
-                <!-- Field Label -->
-                <label
-                  :for="field.id"
-                  class="block text-sm font-medium text-foreground"
-                >
-                  {{ field.label }}
-                  <span
-                    v-if="field.validation?.required"
-                    class="text-destructive ml-1"
-                    >*</span
-                  >
-                </label>
-
-                <!-- Field Description -->
-                <p v-if="field.description" class="text-sm text-muted-foreground">
-                  {{ field.description }}
-                </p>
-
-                <!-- Field Input Based on Type -->
-                <div>
-                  <!-- Text Input -->
-                  <Input
-                    v-if="field.type === 'text'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    :placeholder="field.placeholder"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- Email Input -->
-                  <Input
-                    v-else-if="field.type === 'email'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    type="email"
-                    :placeholder="field.placeholder"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- Number Input -->
-                  <Input
-                    v-else-if="field.type === 'number'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    type="number"
-                    :placeholder="field.placeholder"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- Date Input -->
-                  <Input
-                    v-else-if="field.type === 'date'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    type="date"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- Time Input -->
-                  <Input
-                    v-else-if="field.type === 'time'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    type="time"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- DateTime Input -->
-                  <Input
-                    v-else-if="field.type === 'datetime'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    type="datetime-local"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- Phone Input -->
-                  <Input
-                    v-else-if="field.type === 'phone'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    type="tel"
-                    :placeholder="field.placeholder"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- URL Input -->
-                  <Input
-                    v-else-if="field.type === 'url'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    type="url"
-                    :placeholder="field.placeholder"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- Password Input -->
-                  <Input
-                    v-else-if="field.type === 'password'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    type="password"
-                    :placeholder="field.placeholder"
-                    :required="field.validation?.required"
-                    class="h-10"
-                  />
-
-                  <!-- Textarea -->
-                  <Textarea
-                    v-else-if="field.type === 'textarea'"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    :placeholder="field.placeholder"
-                    :required="field.validation?.required"
-                    rows="3"
-                  />
-
-                  <!-- Select Dropdown -->
-                  <Select
-                    v-else-if="field.type === 'select'"
-                    v-model="formData[field.id]"
-                    :required="field.validation?.required"
-                  >
-                    <SelectTrigger :id="field.id" class="h-10">
-                      <SelectValue
-                        :placeholder="
-                          field.placeholder || 'Choose an option...'
-                        "
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem
-                        v-for="option in field.options"
-                        :key="option.id"
-                        :value="option.value"
-                      >
-                        {{ option.label }}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <!-- Radio Buttons -->
-                  <RadioGroup
-                    v-else-if="field.type === 'radio'"
-                    v-model="formData[field.id]"
-                    :required="field.validation?.required"
-                  >
-                    <div class="space-y-2">
-                      <div
-                        v-for="option in field.options"
-                        :key="option.id"
-                        class="flex items-center space-x-3"
-                      >
-                        <RadioGroupItem :value="option.value" :id="option.id" />
-                        <Label :for="option.id" class="text-sm">{{
-                          option.label
-                        }}</Label>
-                      </div>
-                    </div>
-                  </RadioGroup>
-
-                  <!-- Checkboxes -->
-                  <div v-else-if="field.type === 'checkbox'">
-                    <div class="space-y-2">
-                      <div
-                        v-for="option in field.options"
-                        :key="option.id"
-                        class="flex items-center space-x-3"
-                      >
-                        <Checkbox
-                          :id="option.id"
-                          :checked="isCheckboxChecked(field.id, option.value)"
-                          @update:checked="
-                            updateCheckboxValue(field.id, option.value, $event)
-                          "
-                        />
-                        <Label :for="option.id" class="text-sm">{{
-                          option.label
-                        }}</Label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Field Validation Error -->
-                <p v-if="fieldErrors[field.id]" class="text-sm text-destructive">
-                  {{ fieldErrors[field.id] }}
-                </p>
-              </div>
-
-              <!-- Submit Button -->
-              <div
-                v-if="visibleFields.length > 0"
-                class="flex justify-end space-x-3 pt-4"
-              >
-                <Button
-                  type="button"
-                  variant="outline"
-                  @click="resetForm"
-                  size="default"
-                  class="h-10 px-4"
-                >
-                  Reset Form
-                </Button>
-                <Button
-                  type="submit"
-                  :disabled="isSubmitting"
-                  size="default"
-                  class="h-10 px-6"
-                >
-                  <Icon
-                    v-if="isSubmitting"
-                    icon="radix-icons:update"
-                    class="animate-spin h-4 w-4 mr-2"
-                  />
-                  {{ formBuilder.settings?.submitButtonText || "Submit" }}
-                </Button>
-              </div>
-            </form>
-
-            <!-- Success Message -->
+            <!-- Placeholder -->
             <div
-              v-if="showSuccessMessage"
-              class="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4"
+              v-if="
+                [
+                  'text',
+                  'email',
+                  'number',
+                  'textarea',
+                  'phone',
+                  'url',
+                  'password',
+                ].includes(selectedField.type)
+              "
+              class="space-y-2"
             >
-              <div class="flex items-center">
-                <Icon
-                  icon="radix-icons:check-circled"
-                  class="h-4 w-4 text-green-600 dark:text-green-400 mr-3"
+              <Label for="field-placeholder" class="text-sm font-medium"
+                >Placeholder Text</Label
+              >
+              <Input
+                id="field-placeholder"
+                v-model="selectedField.placeholder"
+                placeholder="Enter placeholder text..."
+                class="h-10"
+              />
+              <p class="text-xs text-muted-foreground">
+                Helpful text shown inside the field
+              </p>
+            </div>
+
+            <!-- Description -->
+            <div class="space-y-2">
+              <Label for="field-description" class="text-sm font-medium"
+                >Help Text</Label
+              >
+              <Textarea
+                id="field-description"
+                v-model="selectedField.description"
+                placeholder="Optional field description..."
+                rows="3"
+                class="resize-none"
+              />
+              <p class="text-xs text-muted-foreground">
+                Additional information to help users
+              </p>
+            </div>
+          </div>
+
+          <!-- Validation Settings -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-6 h-6 bg-orange-50 dark:bg-orange-900/20 rounded-lg flex items-center justify-center"
+              >
+                <ShieldCheck
+                  class="w-3 h-3 text-orange-600 dark:text-orange-400"
                 />
-                <p class="text-sm text-green-800 dark:text-green-200">
-                  {{
-                    formBuilder.settings?.successMessage ||
-                    "Thank you for your submission!"
-                  }}
+              </div>
+              <h3 class="text-sm font-semibold text-card-foreground">
+                Validation
+              </h3>
+            </div>
+
+            <!-- Required Field -->
+            <div
+              class="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border/50"
+            >
+              <div class="flex-1">
+                <Label
+                  for="field-required"
+                  class="text-sm font-medium cursor-pointer"
+                  >Required Field</Label
+                >
+                <p class="text-xs text-muted-foreground mt-1">
+                  Users must fill this field to submit
+                </p>
+              </div>
+              <Checkbox
+                id="field-required"
+                v-model="isFieldRequired"
+                class="ml-3"
+              />
+            </div>
+          </div>
+
+          <!-- Field Options -->
+          <div
+            v-if="['select', 'radio', 'checkbox'].includes(selectedField.type)"
+            class="space-y-4"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-6 h-6 bg-purple-50 dark:bg-purple-900/20 rounded-lg flex items-center justify-center"
+                >
+                  <ListOrdered
+                    class="w-3 h-3 text-purple-600 dark:text-purple-400"
+                  />
+                </div>
+                <h3 class="text-sm font-semibold text-card-foreground">
+                  Options
+                </h3>
+              </div>
+              <Button
+                size="sm"
+                @click="addOption(selectedField)"
+                class="h-8 px-3"
+              >
+                <Plus class="h-3 w-3 mr-1.5" />
+                Add Option
+              </Button>
+            </div>
+
+            <div
+              v-if="selectedField.options && selectedField.options.length > 0"
+              class="space-y-3"
+            >
+              <div
+                v-for="(option, index) in selectedField.options"
+                :key="option.id"
+                class="p-4 border border-border/60 rounded-xl bg-card/50"
+              >
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <Label class="text-xs font-medium text-muted-foreground"
+                      >Option {{ index + 1 }}</Label
+                    >
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      @click="removeOption(selectedField, index)"
+                      class="h-6 w-6 p-0 text-destructive hover:bg-destructive/10 rounded-lg"
+                    >
+                      <X class="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <Input
+                    v-model="option.label"
+                    placeholder="Option label"
+                    class="h-9 text-sm"
+                  />
+                  <Input
+                    v-model="option.value"
+                    placeholder="Option value"
+                    class="h-9 text-sm font-mono"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State for Options -->
+            <div v-else class="text-center py-8 space-y-3">
+              <div
+                class="w-12 h-12 bg-muted/50 rounded-xl flex items-center justify-center mx-auto border-2 border-dashed border-muted-foreground/30"
+              >
+                <Plus class="w-6 h-6 text-muted-foreground/60" />
+              </div>
+              <div>
+                <p class="text-sm font-medium text-card-foreground">
+                  No options yet
+                </p>
+                <p class="text-xs text-muted-foreground">
+                  Add options for users to choose from
                 </p>
               </div>
             </div>
           </div>
         </div>
-        <div v-else class="max-w-4xl mx-auto h-full">
-          <!-- Edit Mode -->
-          <div
-            class="bg-card rounded-lg border border-border p-6 h-full flex flex-col shadow-sm"
-          >
-            <draggable
-              v-model="formBuilder.fields"
-              group="fields"
-              item-key="id"
-              class="flex-1 space-y-4 min-h-0 overflow-y-auto"
-              :empty-insert-threshold="30"
-            >
-              <template #item="{ element, index }">
-                <div
-                  class="relative group"
-                  :class="{
-                    'ring-2 ring-primary ring-opacity-50':
-                      selectedFieldId === element.id,
-                  }"
-                >
-                  <!-- Field Card -->
-                  <div
-                    class="border border-border rounded-lg p-4 bg-card hover:border-muted-foreground/20 transition-all cursor-pointer hover:shadow-sm"
-                    @click="selectField(element.id)"
-                  >
-                    <div class="flex items-start justify-between mb-3">
-                      <div class="flex-1 min-w-0">
-                        <label class="text-sm font-medium text-card-foreground block">
-                          {{ element.label }}
-                          <span
-                            v-if="element.validation?.required"
-                            class="text-destructive ml-1"
-                            >*</span
-                          >
-                        </label>
-                        <div
-                          class="text-xs text-muted-foreground mt-1"
-                          v-if="element.description"
-                        >
-                          {{ element.description }}
-                        </div>
-                      </div>
-                      <div
-                        class="flex items-center gap-1 ml-3"
-                        :class="
-                          selectedFieldId === element.id
-                            ? 'opacity-100'
-                            : 'opacity-0 group-hover:opacity-100 transition-opacity'
-                        "
-                      >
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          @click.stop="duplicateField(element)"
-                          class="h-7 w-7 p-0 hover:bg-primary/10 hover:text-primary"
-                        >
-                          <Icon icon="radix-icons:copy" class="h-3 w-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          @click.stop="deleteField(element.id)"
-                          class="h-7 w-7 p-0 text-destructive hover:bg-destructive/10"
-                        >
-                          <Icon icon="radix-icons:trash" class="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    <!-- Field Preview -->
-                    <Input
-                      v-if="['text', 'email', 'number'].includes(element.type)"
-                      :placeholder="element.placeholder"
-                      disabled
-                      class="h-9"
-                    />
-                    <Input
-                      v-else-if="
-                        [
-                          'date',
-                          'time',
-                          'datetime',
-                          'phone',
-                          'url',
-                          'password',
-                        ].includes(element.type)
-                      "
-                      :type="
-                        element.type === 'datetime'
-                          ? 'datetime-local'
-                          : element.type === 'phone'
-                          ? 'tel'
-                          : element.type
-                      "
-                      :placeholder="
-                        ['phone', 'url', 'password'].includes(element.type)
-                          ? element.placeholder
-                          : undefined
-                      "
-                      disabled
-                      class="h-9"
-                    />
-                    <Textarea
-                      v-else-if="element.type === 'textarea'"
-                      :placeholder="element.placeholder"
-                      disabled
-                      rows="2"
-                    />
-                    <div
-                      v-else-if="element.type === 'select'"
-                      class="p-2 border border-border rounded text-muted-foreground text-sm h-9 flex items-center"
-                    >
-                      {{ element.placeholder || "Select an option..." }}
-                    </div>
-                    <div
-                      v-else-if="element.type === 'radio' && element.options"
-                      class="space-y-2"
-                    >
-                      <div
-                        v-for="option in element.options.slice(0, 2)"
-                        :key="option.id"
-                        class="flex items-center space-x-2"
-                      >
-                        <div
-                          class="h-3 w-3 border border-border rounded-full"
-                        ></div>
-                        <span class="text-xs text-muted-foreground">{{
-                          option.label
-                        }}</span>
-                      </div>
-                    </div>
-                    <div
-                      v-else-if="element.type === 'checkbox' && element.options"
-                      class="space-y-2"
-                    >
-                      <div
-                        v-for="option in element.options.slice(0, 2)"
-                        :key="option.id"
-                        class="flex items-center space-x-2"
-                      >
-                        <div
-                          class="h-3 w-3 border border-border rounded"
-                        ></div>
-                        <span class="text-xs text-muted-foreground">{{
-                          option.label
-                        }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-              <template #footer>
-                <div
-                  v-if="formBuilder.fields.length === 0"
-                  class="text-center py-12"
-                >
-                  <Icon
-                    icon="radix-icons:component-instance"
-                    class="h-12 w-12 text-muted-foreground mx-auto mb-3"
-                  />
-                  <h3 class="text-lg font-medium text-card-foreground mb-2">
-                    Start building your form
-                  </h3>
-                  <p class="text-muted-foreground">
-                    Drag and drop field types from the left panel to begin
-                    creating your form
-                  </p>
-                </div>
-              </template>
-            </draggable>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Panel - Field Configuration -->
-    <div
-      v-if="selectedField && !showPreview"
-      class="bg-card border-l border-border flex flex-col flex-shrink-0"
-    >
-      <div class="px-5 py-4 border-b border-border flex-shrink-0">
-        <div class="flex items-center gap-3">
-          <div class="p-2 bg-primary/10 rounded-lg">
-            <Icon
-              :icon="getFieldIcon(selectedField.type)"
-              class="h-4 w-4 text-primary"
-            />
-          </div>
-          <div class="min-w-0 flex-1">
-            <h2 class="text-base font-semibold text-card-foreground truncate">
-              {{ selectedField.label }}
-            </h2>
-            <p class="text-xs text-muted-foreground">
-              {{ getFieldTypeName(selectedField.type) }} field
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex-1 overflow-y-auto p-5 space-y-5">
-        <!-- Field Actions -->
-        <div class="flex gap-2">
-          <Button
-            @click="
-              duplicateField(selectedField);
-              selectedFieldId = null;
-            "
-            variant="outline"
-            size="sm"
-            class="flex-1 h-8"
-          >
-            <Icon icon="radix-icons:copy" class="h-3 w-3 mr-1.5" />
-            Duplicate
-          </Button>
-          <Button
-            @click="
-              deleteField(selectedField.id);
-              selectedFieldId = null;
-            "
-            variant="outline"
-            size="sm"
-            class="flex-1 h-8 text-destructive border-destructive/20 hover:bg-destructive/10"
-          >
-            <Icon icon="radix-icons:trash" class="h-3 w-3 mr-1.5" />
-            Delete
-          </Button>
-        </div>
-
-        <!-- Basic Field Settings -->
-        <div class="space-y-4">
-          <h3 class="text-sm font-medium text-card-foreground">Basic Settings</h3>
-
-          <!-- Field Label -->
-          <div class="space-y-1.5">
-            <Label for="field-label" class="text-xs font-medium"
-              >Field Label</Label
-            >
-            <Input
-              id="field-label"
-              v-model="selectedField.label"
-              placeholder="Enter field label..."
-              class="h-8"
-            />
-          </div>
-
-          <!-- Placeholder -->
-          <div
-            v-if="
-              ['text', 'email', 'number', 'textarea'].includes(
-                selectedField.type
-              )
-            "
-            class="space-y-1.5"
-          >
-            <Label for="field-placeholder" class="text-xs font-medium"
-              >Placeholder Text</Label
-            >
-            <Input
-              id="field-placeholder"
-              v-model="selectedField.placeholder"
-              placeholder="Enter placeholder text..."
-              class="h-8"
-            />
-          </div>
-
-          <!-- Description -->
-          <div class="space-y-1.5">
-            <Label for="field-description" class="text-xs font-medium"
-              >Help Text</Label
-            >
-            <Textarea
-              id="field-description"
-              v-model="selectedField.description"
-              placeholder="Optional field description..."
-              rows="2"
-            />
-          </div>
-        </div>
-
-        <!-- Validation Settings -->
-        <div class="space-y-3">
-          <h3 class="text-sm font-medium text-card-foreground">Validation</h3>
-
-          <!-- Required -->
-          <div
-            class="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-          >
-            <div>
-              <Label for="field-required" class="text-xs font-medium"
-                >Required Field</Label
-              >
-              <p class="text-xs text-muted-foreground">Users must fill this field</p>
-            </div>
-            <Checkbox id="field-required" v-model="isFieldRequired" />
-          </div>
-        </div>
-
-        <!-- Field Options -->
-        <div
-          v-if="['select', 'radio', 'checkbox'].includes(selectedField.type)"
-          class="space-y-3"
-        >
-          <div class="flex items-center justify-between">
-            <h3 class="text-sm font-medium text-card-foreground">Options</h3>
-            <Button
-              size="sm"
-              @click="addOption(selectedField)"
-              class="h-7 px-2"
-            >
-              <Icon icon="radix-icons:plus" class="h-3 w-3 mr-1" />
-              Add
-            </Button>
-          </div>
-
-          <div
-            v-if="selectedField.options && selectedField.options.length > 0"
-            class="space-y-2"
-          >
-            <div
-              v-for="(option, index) in selectedField.options"
-              :key="option.id"
-              class="p-3 border border-border rounded-lg"
-            >
-              <div class="space-y-2">
-                <div class="flex items-center justify-between">
-                  <Label class="text-xs font-medium text-muted-foreground"
-                    >Option {{ index + 1 }}</Label
-                  >
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    @click="removeOption(selectedField, index)"
-                    class="h-5 w-5 p-0 text-destructive hover:bg-destructive/10"
-                  >
-                    <Icon icon="radix-icons:trash" class="h-3 w-3" />
-                  </Button>
-                </div>
-                <Input
-                  v-model="option.label"
-                  placeholder="Option label"
-                  class="h-7 text-xs"
-                />
-                <Input
-                  v-model="option.value"
-                  placeholder="Option value"
-                  class="h-7 text-xs font-mono"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div v-else class="text-center py-4 text-muted-foreground">
-            <Icon
-              icon="radix-icons:plus-circled"
-              class="h-6 w-6 mx-auto mb-2 text-muted-foreground"
-            />
-            <p class="text-xs">No options added yet</p>
-          </div>
-        </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
 
     <!-- Load Form Dialog -->
     <Dialog v-model:open="showLoadDialog">
@@ -853,7 +1392,7 @@
             >Close</Button
           >
           <Button @click="copyToClipboard">
-            <Icon icon="radix-icons:copy" class="h-4 w-4 mr-2" />
+            <Copy class="h-4 w-4 mr-2" />
             Copy to Clipboard
           </Button>
         </DialogFooter>
@@ -864,9 +1403,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import draggable from "vuedraggable";
-import { Icon } from "@iconify/vue";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -895,9 +1433,66 @@ import type {
   FieldTypeDefinition,
   FormBuilder,
 } from "@/types/form";
+import {
+  Upload,
+  Download,
+  Ellipsis,
+  Component,
+  Layers3,
+  CheckCircle2,
+  ArrowLeft,
+  Eye,
+  RotateCcw,
+  Send,
+  Mail,
+  Phone,
+  Hash,
+  AlignLeft,
+  ChevronDown,
+  Circle,
+  Square,
+  Calendar,
+  Clock,
+  Timer,
+  FileUp,
+  Link,
+  Lock,
+  GripVertical,
+  Edit3,
+  Save,
+  RotateCw,
+  MessageSquare,
+  TextCursorInput,
+  Copy,
+  Trash2,
+  Plus,
+  X,
+  Settings,
+  ShieldCheck,
+  MessageCircle,
+  TriangleAlert,
+  Zap,
+  ListOrdered,
+} from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const route = useRoute();
+const router = useRouter();
 const formBuilderStore = useFormBuilderStore();
 
 // Reactive state
@@ -907,6 +1502,11 @@ const showLoadDialog = ref(false);
 const showExportDialog = ref(false);
 const loadFormJson = ref("");
 const isSaving = ref(false);
+const showSuccessConfig = ref(false);
+
+// Loading and transition state
+const showLoading = ref(false);
+const isTransitioning = computed(() => showLoading.value);
 
 // Form preview state
 const formData = ref<Record<string, any>>({});
@@ -925,6 +1525,7 @@ const formBuilder = ref<FormBuilder>({
     successMessage: "Thank you for your submission!",
     redirectUrl: "",
     allowMultipleSubmissions: true,
+    autoHideSuccess: true,
     requireAuthentication: false,
   },
   createdAt: new Date(),
@@ -943,7 +1544,7 @@ const exportFormJson = computed(() =>
 
 const visibleFields = computed(() =>
   formBuilder.value.fields
-    .filter((field) => field.isVisible !== false)
+    .filter((field: FormField) => field.isVisible !== false)
     .sort((a, b) => a.order - b.order)
 );
 
@@ -1114,49 +1715,6 @@ const fieldCategories = [
       },
     ],
   },
-  //   {
-  //     name: "Advanced Fields",
-  //     fields: [
-  //       {
-  //         type: "file" as FieldType,
-  //         label: "File Upload",
-  //         icon: "radix-icons:upload",
-  //         description: "File upload field",
-  //         category: "advanced" as const,
-  //         defaultConfig: {
-  //           label: "Upload File",
-  //           validation: { required: false },
-  //           width: "full" as const,
-  //         },
-  //       },
-  //       {
-  //         type: "url" as FieldType,
-  //         label: "URL",
-  //         icon: "radix-icons:link-1",
-  //         description: "Website URL field",
-  //         category: "advanced" as const,
-  //         defaultConfig: {
-  //           label: "Website URL",
-  //           placeholder: "https://example.com",
-  //           validation: { required: false },
-  //           width: "full" as const,
-  //         },
-  //       },
-  //       {
-  //         type: "password" as FieldType,
-  //         label: "Password",
-  //         icon: "radix-icons:lock-closed",
-  //         description: "Password input field",
-  //         category: "advanced" as const,
-  //         defaultConfig: {
-  //           label: "Password",
-  //           placeholder: "Enter password...",
-  //           validation: { required: false },
-  //           width: "full" as const,
-  //         },
-  //       },
-  //     ],
-  //   },
 ];
 
 // Methods
@@ -1165,24 +1723,24 @@ const generateUniqueId = (): string => {
 };
 
 // Helper functions for mobile field settings
-const getFieldIcon = (fieldType: FieldType): string => {
-  const iconMap: Record<FieldType, string> = {
-    text: "radix-icons:input",
-    email: "radix-icons:envelope-closed",
-    phone: "radix-icons:mobile",
-    number: "radix-icons:hash",
-    textarea: "radix-icons:text-align-left",
-    select: "radix-icons:chevron-down",
-    radio: "radix-icons:radiobutton",
-    checkbox: "radix-icons:checkbox",
-    date: "radix-icons:calendar",
-    time: "radix-icons:timer",
-    datetime: "radix-icons:clock",
-    file: "radix-icons:upload",
-    url: "radix-icons:link-1",
-    password: "radix-icons:lock-closed",
+const getFieldIcon = (fieldType: FieldType) => {
+  const iconMap: Record<FieldType, any> = {
+    text: TextCursorInput,
+    email: Mail,
+    phone: Phone,
+    number: Hash,
+    textarea: AlignLeft,
+    select: ChevronDown,
+    radio: Circle,
+    checkbox: Square,
+    date: Calendar,
+    time: Clock,
+    datetime: Timer,
+    file: FileUp,
+    url: Link,
+    password: Lock,
   };
-  return iconMap[fieldType] || "radix-icons:component-instance";
+  return iconMap[fieldType] || Component;
 };
 
 const getFieldTypeName = (fieldType: FieldType): string => {
@@ -1453,10 +2011,12 @@ const handleSubmit = async () => {
     console.log("Form submitted:", formData.value);
     showSuccessMessage.value = true;
 
-    // Auto-hide success message after 5 seconds
-    setTimeout(() => {
-      showSuccessMessage.value = false;
-    }, 5000);
+    // Auto-hide success message based on configuration
+    if (formBuilder.value.settings?.autoHideSuccess) {
+      setTimeout(() => {
+        showSuccessMessage.value = false;
+      }, 5000);
+    }
   } catch (error) {
     console.error("Form submission error:", error);
   } finally {
@@ -1517,6 +2077,14 @@ watch(
   { deep: true }
 );
 
+// Watch for route changes to handle step parameter
+watch(
+  () => route.query.step,
+  (newStep) => {
+    showSuccessConfig.value = newStep === "success";
+  }
+);
+
 // Initialize
 onMounted(() => {
   // Load form from store if it exists
@@ -1524,6 +2092,11 @@ onMounted(() => {
   if (existingForm) {
     // Use Object.assign to update the ref without breaking reactivity
     Object.assign(formBuilder.value, existingForm);
+  }
+
+  // Check if we should show success configuration based on query parameter
+  if (route.query.step === "success") {
+    showSuccessConfig.value = true;
   }
 
   // Initialize form data for preview
@@ -1548,6 +2121,51 @@ const isFieldRequired = computed({
     // Update the required property directly in the array to ensure reactivity
     formBuilder.value.fields[fieldIndex].validation!.required = value;
   },
+});
+
+// Navigation functions
+const goToFormBuilder = () => {
+  showSuccessConfig.value = false;
+  router.push({ query: {} }); // Remove step query parameter
+};
+
+const goToSuccessConfig = () => {
+  showSuccessConfig.value = true;
+  router.push({ query: { step: "success" } });
+};
+
+const goToPreviewPage = () => {
+  // Save form before navigating to preview
+  saveForm().then(() => {
+    // Open preview page in new tab
+    const previewUrl = `/studio/forms/${route.params.id}/preview`;
+    window.open(previewUrl, "_blank");
+  });
+};
+
+// Utility functions
+const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const previewConfiguration = () => {
+  // Switch to preview mode to show the form with current configuration
+  showPreview.value = true;
+  showSuccessConfig.value = false;
+  router.push({ query: {} });
+};
+
+// Computed properties
+const isConfigurationValid = computed(() => {
+  const hasSubmitText = formBuilder.value.settings?.submitButtonText?.trim();
+  const hasSuccessMessage = formBuilder.value.settings?.successMessage?.trim();
+
+  return hasSubmitText && hasSuccessMessage;
 });
 </script>
 
@@ -1591,5 +2209,67 @@ const isFieldRequired = computed({
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Content transition animations */
+.content-fade-enter-active,
+.content-fade-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-fade-enter-from {
+  opacity: 0;
+  transform: translateX(20px) scale(0.95);
+}
+
+.content-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-20px) scale(0.95);
+}
+
+.content-fade-enter-to,
+.content-fade-leave-from {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+/* Add smoother transition for content switching */
+.content-fade-enter-active {
+  transition-delay: 150ms;
+}
+
+/* Loading state animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-ping {
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Loading fade in animation */
+.loading-fade-enter-active {
+  transition: opacity 0.2s ease-in;
+}
+
+.loading-fade-enter-from {
+  opacity: 0;
 }
 </style>

@@ -268,6 +268,7 @@ const stepCompletionStatus = ref({
   builder: false, // Form Fields
   terms: false, // Terms & Conditions
   whatsapp: false, // WhatsApp & Redirect
+  success: false, // Success Configuration
 });
 
 // Form setup steps
@@ -321,13 +322,22 @@ const configurationSteps = computed(() => [
     completed: stepCompletionStatus.value.whatsapp,
     status: stepCompletionStatus.value.whatsapp ? "Completed" : "Optional",
   },
+  {
+    id: 7,
+    title: "Success Configuration",
+    description: "Configure success message and submit button text",
+    icon: CheckIcon,
+    url: `/studio/forms/${formId.value}/field-builder-3?step=success`,
+    completed: stepCompletionStatus.value.success,
+    status: stepCompletionStatus.value.success ? "Completed" : "Recommended",
+  },
 ]);
 
 // Form builder completion status
 const formBuilderCompleted = computed(() => stepCompletionStatus.value.builder);
 
 // Calculate progress
-const totalSteps = computed(() => 6); // Total number of steps
+const totalSteps = computed(() => 7); // Total number of steps
 const completedSteps = computed(() => {
   return Object.values(stepCompletionStatus.value).filter(Boolean).length;
 });
